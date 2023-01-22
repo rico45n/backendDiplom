@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.pesnin.system.accounting.integration.dto.MapperStringToEntity;
-import ru.pesnin.system.accounting.integration.dto.network.NetworkDTO;
+import ru.pesnin.system.accounting.integration.dto.network.NetworkDto;
 import ru.pesnin.system.accounting.services.service.interfase.pac.network.INetworkService;
 
 import java.util.List;
@@ -17,26 +17,26 @@ public class NetworkController  {
     private INetworkService networkService;
 
     @RequestMapping(value = "/NetworkAll", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public List<NetworkDTO> findAll() {
+    public List<NetworkDto> findAll() {
         return networkService.findAll();
     }
 
     @RequestMapping(value = "/SearchNetwork/{id_network}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public NetworkDTO read(@PathVariable("id_network") NetworkDTO obj) {
+    public NetworkDto read(@PathVariable("id_network") NetworkDto obj) {
         return networkService.read(obj);
     }
 
     @RequestMapping(value = "/DeleteNetwork/{id_network}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public List<NetworkDTO> delete(@PathVariable("id_network") Integer id, @RequestBody NetworkDTO obj) {
+    public List<NetworkDto> delete(@PathVariable("id_network") Integer id, @RequestBody NetworkDto obj) {
         return networkService.delete( id, obj);
     }
 
     @RequestMapping(value = "/UpdateNetwork/{id_network}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public List<NetworkDTO> update(@PathVariable("id_network") Integer id_network, @RequestBody NetworkDTO obj) {
+    public List<NetworkDto> update(@PathVariable("id_network") Integer id_network, @RequestBody NetworkDto obj) {
         return networkService.update(id_network, obj);
     }
     @RequestMapping(value = "/CreateNetwork", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public List<NetworkDTO> create(@RequestBody NetworkDTO obj){
+    public List<NetworkDto> create(@RequestBody NetworkDto obj){
         return networkService.create(obj);
     }
 

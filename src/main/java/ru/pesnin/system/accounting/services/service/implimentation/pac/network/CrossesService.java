@@ -2,7 +2,7 @@ package ru.pesnin.system.accounting.services.service.implimentation.pac.network;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.pesnin.system.accounting.services.entity.network.CrossesDomain;
+import ru.pesnin.system.accounting.services.entity.network.CrossesEntity;
 import ru.pesnin.system.accounting.services.repository.network.CrossesRepository;
 import ru.pesnin.system.accounting.services.service.interfase.pac.network.ICrossesService;
 
@@ -14,7 +14,7 @@ public class CrossesService implements ICrossesService {
     private CrossesRepository crossesRepository;
 
     @Override
-    public List<CrossesDomain> findAll() {
+    public List<CrossesEntity> findAll() {
         try {
             return crossesRepository.findAll();
         }catch (RuntimeException e){
@@ -25,12 +25,12 @@ public class CrossesService implements ICrossesService {
     }
 
     @Override
-    public CrossesDomain read(CrossesDomain crosses) {
+    public CrossesEntity read(CrossesEntity crosses) {
        return null;
     }
 
     @Override
-    public List<CrossesDomain>  delete(Integer crosses) {
+    public List<CrossesEntity>  delete(Integer crosses) {
         try {
             crossesRepository.delete(crossesRepository.findById(crosses).get());
             return crossesRepository.findAll();
@@ -41,13 +41,13 @@ public class CrossesService implements ICrossesService {
     }
 
     @Override
-    public List<CrossesDomain> update(Integer id_crosses, CrossesDomain new_obj) {
+    public List<CrossesEntity> update(Integer idCrosses, CrossesEntity newCrossEntity) {
         try {
-            crossesRepository.findById(id_crosses).map(crossesDomain -> {
-                crossesDomain.setId_crosses_end(new_obj.getId_crosses_end());
-                crossesDomain.setPort(new_obj.getPort());
-                crossesDomain.setSlot(new_obj.getSlot());
-                crossesDomain.setShkaf(new_obj.getShkaf());
+            crossesRepository.findById(idCrosses).map(crossesDomain -> {
+                crossesDomain.setIdCrossesEnd(newCrossEntity.getIdCrossesEnd());
+                crossesDomain.setPort(newCrossEntity.getPort());
+                crossesDomain.setSlot(newCrossEntity.getSlot());
+                crossesDomain.setShkaf(newCrossEntity.getShkaf());
                 return crossesRepository.save(crossesDomain);
             });
             return crossesRepository.findAll();
@@ -59,10 +59,10 @@ public class CrossesService implements ICrossesService {
     }
 
     @Override
-    public List<CrossesDomain> create(CrossesDomain obj) {
+    public List<CrossesEntity> create(CrossesEntity crossesEntity) {
 
         try {
-            crossesRepository.save(obj);
+            crossesRepository.save(crossesEntity);
             return crossesRepository.findAll();
         }
         catch (Exception e) {

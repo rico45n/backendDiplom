@@ -1,43 +1,29 @@
 package ru.pesnin.system.accounting.integration.dto.filter;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class NetworkJournalIpAddressFilter {
+
     private Integer id;
-    private String ip_address;
+    @JsonProperty("ip_address")
+    private String ipAddress;
 
-    public NetworkJournalIpAddressFilter(Integer id, String ip_address) {
+    public void setNetworkJournalIpAddressFilter(Integer id, String ipAddress) {
         this.id = id;
-        this.ip_address = ip_address;
-    }
-
-    public NetworkJournalIpAddressFilter() {
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getIp_address() {
-        return ip_address;
-    }
-
-    public void setIp_address(String ip_address) {
-        this.ip_address = ip_address;
-    }
-
-    public void setNetworkJournalIpAddressFilter(Integer id, String ip_address) {
-        this.id = id;
-        this.ip_address = ip_address;
+        this.ipAddress = ipAddress;
     }
 
     @Override
     public String toString() {
         return "NetworkJournalIpAddressFilter{" +
                 "id=" + id +
-                ", ip_address='" + ip_address + '\'' +
+                ", ip_address='" + ipAddress + '\'' +
                 '}';
     }
 }

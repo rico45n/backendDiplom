@@ -3,22 +3,23 @@ package ru.pesnin.system.accounting.services.service.implimentation.pac.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.pesnin.system.accounting.services.entity.user.UsersDomain;
+import ru.pesnin.system.accounting.services.entity.user.UsersEntity;
 import ru.pesnin.system.accounting.services.repository.user.UserRepository;
 import ru.pesnin.system.accounting.services.service.interfase.pac.user.IUserService;
 
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService implements IUserService {
     @Autowired
-    private UserRepository userrepository;
+    private UserRepository userRepository;
 
     @Override
-    public List<UsersDomain> findAll() {
+    public List<UsersEntity> findAll() {
         try {
-            return userrepository.findAll();
+            return userRepository.findAll();
         } catch (Exception e){
             System.out.println(e.getMessage());
             return null;
@@ -26,58 +27,54 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UsersDomain read(UsersDomain obj) {
-       try {
-           return obj;
-       }catch (Exception e) {
-           System.out.println(e.getMessage());
-           return null;
-       }
+    public Optional<UsersEntity> read(UsersEntity obj) {
+       var t =  userRepository.findById(obj.getUserId());
+      return t;
     }
 
     @Override
-    public List<UsersDomain> delete(Integer obj) {
+    public List<UsersEntity> delete(Integer obj) {
         try {
-            userrepository.delete(obj);
-            return userrepository.findAll();
+            userRepository.delete(obj);
+            return userRepository.findAll();
         }catch (Exception e){
             System.out.println(e.getMessage());
-            return userrepository.findAll();
+            return userRepository.findAll();
         }
     }@Override
-    public List<UsersDomain> update(UsersDomain obj, Integer user_id) {
+    public List<UsersEntity> update(UsersEntity obj, Integer userId) {
         try {
 
-            userrepository.findById(user_id).map(employee -> {
+            userRepository.findById(userId).map(employee -> {
                 employee.setEmail(obj.getEmail());
                 employee.setPhone(obj.getPhone());
-                employee.setFirst_name(obj.getFirst_name());
-                employee.setLast_name(obj.getLast_name());
-                employee.setMiddle_name(obj.getMiddle_name());
-                employee.setUser_login(obj.getUser_login());
-                employee.setUser_role(obj.getUser_role());
-                return userrepository.save(employee);
+                employee.setFirstName(obj.getFirstName());
+                employee.setLastName(obj.getLastName());
+                employee.setMiddleName(obj.getMiddleName());
+                employee.setUserLogin(obj.getUserLogin());
+                employee.setUserRole(obj.getUserRole());
+                return userRepository.save(employee);
             }).orElseGet(() -> {
-                        obj.setUser_id(user_id);
-                        return userrepository.save(obj);
+                        obj.setUserId(userId);
+                        return userRepository.save(obj);
                     });
-            return userrepository.findAll();
+            return userRepository.findAll();
         }
         catch (Exception e){
-            return userrepository.findAll();
+            return userRepository.findAll();
         }
     }
 
     @Override
-    public List<UsersDomain> create(UsersDomain obj) {
+    public List<UsersEntity> create(UsersEntity obj) {
         try {
-            if(obj.getFioUser().length() > 0 && obj.getUser_login().length()>0
-                && obj.getUser_password().length()>3 && obj.getPhone().length()>0 && obj.getEmail().length()>0) {
-                userrepository.save(obj);
-                return userrepository.findAll();
+            if(obj.getFioUser().length() > 0 && obj.getUserLogin().length()>0
+                && obj.getUserPassword().length()>3 && obj.getPhone().length()>0 && obj.getEmail().length()>0) {
+                userRepository.save(obj);
+                return userRepository.findAll();
             }
             else {
-                return userrepository.findAll();
+                return userRepository.findAll();
             }
         }
         catch (Exception e) {
@@ -86,9 +83,9 @@ public class UserService implements IUserService {
         }
     }
     @Override
-    public UsersDomain loginUserSearch(String login,String password) {
+    public UsersEntity loginUserSearch(String login, String password) {
         try {
-            return userrepository.findAllByLogin(login, password);
+            return userRepository.findAllByLogin(login, password);
         }catch (Exception e){
             return null;
         }

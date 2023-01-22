@@ -2,14 +2,14 @@ package ru.pesnin.system.accounting.services.service.interfase.pac.network;
 
 
 
-import ru.pesnin.system.accounting.integration.dto.network.NodesDTO;
+import ru.pesnin.system.accounting.integration.dto.network.NodesDto;
 
 import java.util.List;
 
 public interface INodesService {
-    List<NodesDTO> findAll();
-    NodesDTO read(NodesDTO obj);
-    List<NodesDTO> delete(Integer id_nodes);
-    List<NodesDTO> update(Integer id_nodes, NodesDTO new_obj);
-    List<NodesDTO> create(NodesDTO obj);
+    List<NodesDto> findAll();
+    NodesDto read(NodesDto obj);
+    List<NodesDto> delete(Integer idNodes);
+    List<NodesDto> update(Integer idNodes, NodesDto newObj);
+    List<NodesDto> create(NodesDto obj);
 }

@@ -4,10 +4,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class BackendDipApplication {
-
+public class BackendDiplomApplication {
     public static void main(String[] args) {
-        SpringApplication.run(BackendDipApplication.class, args);
+        SpringApplication.run(BackendDiplomApplication.class, args);
     }
-
 }

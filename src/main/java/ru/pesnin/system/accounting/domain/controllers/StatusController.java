@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import ru.pesnin.system.accounting.services.entity.RefStatusDomain;
+import ru.pesnin.system.accounting.services.entity.RefStatusEntity;
 import ru.pesnin.system.accounting.services.repository.RefStatusRepository;
 
 import java.util.List;
@@ -19,7 +19,7 @@ public class StatusController {
     private RefStatusRepository refStatusRepository;
 
     @RequestMapping(value = "/StatusAll", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public List<RefStatusDomain> findAll() {
+    public List<RefStatusEntity> findAll() {
         return refStatusRepository.findAll();
     }
 }

@@ -3,17 +3,17 @@ package ru.pesnin.system.accounting.services.service.implimentation.pac.devices;
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.pesnin.system.accounting.integration.dto.devices.DevicesDTO;
-import ru.pesnin.system.accounting.integration.dto.devices.InfoCrossDeviceEndDTO;
+import ru.pesnin.system.accounting.integration.dto.devices.DevicesDto;
+import ru.pesnin.system.accounting.integration.dto.devices.InfoCrossDeviceEndDto;
 import ru.pesnin.system.accounting.integration.dto.filter.NetworkJournalDeviceFilter;
-import ru.pesnin.system.accounting.services.entity.RefStatusDomain;
-import ru.pesnin.system.accounting.services.entity.devices.DevicesDomain;
-import ru.pesnin.system.accounting.services.entity.devices.PropsPortDomain;
-import ru.pesnin.system.accounting.services.entity.devices.TypeDeviceDomain;
-import ru.pesnin.system.accounting.services.entity.journal.CrossDevicesDomain;
-import ru.pesnin.system.accounting.services.entity.journal.NetworkJournalDomain;
-import ru.pesnin.system.accounting.services.entity.room.RoomDomain;
-import ru.pesnin.system.accounting.services.entity.user.UsersDomain;
+import ru.pesnin.system.accounting.services.entity.RefStatusEntity;
+import ru.pesnin.system.accounting.services.entity.devices.DevicesEntity;
+import ru.pesnin.system.accounting.services.entity.devices.PropsPortEntity;
+import ru.pesnin.system.accounting.services.entity.devices.TypeDeviceEntity;
+import ru.pesnin.system.accounting.services.entity.journal.CrossDevicesEntity;
+import ru.pesnin.system.accounting.services.entity.journal.NetworkJournalEntity;
+import ru.pesnin.system.accounting.services.entity.room.RoomEntity;
+import ru.pesnin.system.accounting.services.entity.user.UsersEntity;
 import ru.pesnin.system.accounting.services.repository.RefStatusRepository;
 import ru.pesnin.system.accounting.services.repository.devices.DevicesRepository;
 import ru.pesnin.system.accounting.services.repository.devices.PropsPortRepository;
@@ -52,21 +52,21 @@ public class DevicesService implements IDeviceService {
     private EntityManager em;
 
     @Override
-    public List<DevicesDTO> findAll() {
+    public List<DevicesDto> findAll() {
         return mapperEntityToDTO();
     }
 
     @Override
-    public DevicesDTO read(DevicesDTO obj) {
+    public DevicesDto read(DevicesDto obj) {
         return null;
     }
 
     @Override
-    public InfoCrossDeviceEndDTO searchCrossDeviceInfo(Integer id_devices) {
+    public InfoCrossDeviceEndDto searchCrossDeviceInfo(Integer idDevices) {
         try {
-            Query deviceEnd = em.createNativeQuery("select * from network.infocrossedevice inf where inf.id_devices = ?1", InfoCrossDeviceEndDTO.class);
-            deviceEnd.setParameter(1, id_devices);
-            return (InfoCrossDeviceEndDTO) deviceEnd.getResultList().get(0);
+            Query deviceEnd = em.createNativeQuery("select * from network.infocrossedevice inf where inf.id_devices = ?1", InfoCrossDeviceEndDto.class);
+            deviceEnd.setParameter(1, idDevices);
+            return (InfoCrossDeviceEndDto) deviceEnd.getResultList().get(0);
         }
         catch (Exception e){
             return null;
@@ -74,44 +74,44 @@ public class DevicesService implements IDeviceService {
     }
 
     @Override
-    public List<InfoCrossDeviceEndDTO> getAllCrossDevicesInfo() {
-      Query deviceEnd =  em.createNativeQuery("select * from network.infocrossedevice inf", InfoCrossDeviceEndDTO.class);
+    public List<InfoCrossDeviceEndDto> getAllCrossDevicesInfo() {
+      Query deviceEnd =  em.createNativeQuery("select * from network.infocrossedevice inf", InfoCrossDeviceEndDto.class);
 
-        List<InfoCrossDeviceEndDTO> infoCrossDeviceEndDTOList = (List<InfoCrossDeviceEndDTO>) deviceEnd.getResultList();
+        List<InfoCrossDeviceEndDto> infoCrossDeviceEndDTOList = (List<InfoCrossDeviceEndDto>) deviceEnd.getResultList();
         return infoCrossDeviceEndDTOList;
     }
 
     @Override
-    public List<DevicesDTO> delete(Integer id_devices, Integer id_user_old) {
-        Optional<DevicesDomain> devicesDomain = devicesRepository.findById(id_devices);
+    public List<DevicesDto> delete(Integer idDevices, Integer idUserOld) {
+        Optional<DevicesEntity> devicesEntity = devicesRepository.findById(idDevices);
 
-        propsPortRepository.delete(devicesDomain.get().getId_props_port());
-        devicesRepository.delete(id_devices);
-        List<NetworkJournalDomain> networkJournalDomains = networkJournalRepository.findBy_AndId_devices(id_devices);
-        for(NetworkJournalDomain networkJournalDomain : networkJournalDomains){
-            networkJournalDomain.setIs_status(refStatusRepository.findById(2).get());
-            networkJournalDomain.setDate_old(new Date());
-            networkJournalDomain.setId_user_old(userRepository.findById(id_user_old).get());
+        propsPortRepository.delete(devicesEntity.get().getIdPropsPort());
+        devicesRepository.delete(idDevices);
+        List<NetworkJournalEntity> networkJournalDomains = networkJournalRepository.findBy_AndId_devices(idDevices);
+        for(NetworkJournalEntity networkJournalDomain : networkJournalDomains){
+            networkJournalDomain.setIsStatus(refStatusRepository.findById(2).get());
+            networkJournalDomain.setDateOld(new Date());
+            networkJournalDomain.setIdUserOld(userRepository.findById(idUserOld).get());
             networkJournalRepository.save(networkJournalDomain);
         }
 
        try {
            try {
-               List<CrossDevicesDomain> crossDevicesDomains = crossDevicesRepository.findBy_deviceFirst(id_devices);
-                for(CrossDevicesDomain crossDevicesDomain : crossDevicesDomains){
-                   crossDevicesDomain.setIs_status(refStatusRepository.findById(2).get());
-                   crossDevicesDomain.setDescription("Удалено устройство");
-                   crossDevicesDomain.setId_user_old(userRepository.findById(id_user_old).get());
-                   crossDevicesDomain.setDate_old(new Date());
-                   crossDevicesRepository.save(crossDevicesDomain);
+               List<CrossDevicesEntity> crossDevicesEntities = crossDevicesRepository.findBy_deviceFirst(idDevices);
+                for(CrossDevicesEntity crossDevicesEntity : crossDevicesEntities){
+                   crossDevicesEntity.setIsStatus(refStatusRepository.findById(2).get());
+                   crossDevicesEntity.setDescription("Удалено устройство");
+                   crossDevicesEntity.setIdUserOld(userRepository.findById(idUserOld).get());
+                   crossDevicesEntity.setDateOld(new Date());
+                   crossDevicesRepository.save(crossDevicesEntity);
                }
            } catch (Exception e) {
-               CrossDevicesDomain crossDevicesDomain = crossDevicesRepository.findBy_deviceEnd(id_devices);
-               crossDevicesDomain.setIs_status(refStatusRepository.findById(2).get());
-               crossDevicesDomain.setDescription("Удалено устройство");
-               crossDevicesDomain.setId_user_old(userRepository.findById(id_user_old).get());
-               crossDevicesDomain.setDate_old(new Date());
-               crossDevicesRepository.save(crossDevicesDomain);
+               CrossDevicesEntity crossDevicesEntity = crossDevicesRepository.findBy_deviceEnd(idDevices);
+               crossDevicesEntity.setIsStatus(refStatusRepository.findById(2).get());
+               crossDevicesEntity.setDescription("Удалено устройство");
+               crossDevicesEntity.setIdUserOld(userRepository.findById(idUserOld).get());
+               crossDevicesEntity.setDateOld(new Date());
+               crossDevicesRepository.save(crossDevicesEntity);
            }
        }catch (Exception e){
            System.out.println("Не удалось удалить запись в журнале подключений: "+ e.getMessage());
@@ -120,43 +120,44 @@ public class DevicesService implements IDeviceService {
     }
 
     @Override
-    public List<DevicesDTO> update(DevicesDTO obj, Integer id_devices) {
-        PropsPortDomain propsPortDomain = new PropsPortDomain(obj.getCountOptPort(),obj.getCountEthernetPort());
+    public List<DevicesDto> update(DevicesDto obj, Integer idDevices) {
+        PropsPortEntity propsPortEntity = new PropsPortEntity(obj.getCountOptPort(),obj.getCountEthernetPort());
 
-        Optional<TypeDeviceDomain> typeDeviceDomain = typeDeviceRepository.findById(obj.getId_type_devices());
-        Optional<UsersDomain> usersDomain = userRepository.findById(obj.getId_user_otv());
-        Optional<RoomDomain> roomDomain = roomRepository.findById(obj.getId_room());
-        Optional<RefStatusDomain> refStatusDomain = refStatusRepository.findById(obj.getId_status());
+        Optional<TypeDeviceEntity> typeDeviceEntity = typeDeviceRepository.findById(obj.getIdTypeDevices());
+        Optional<UsersEntity> usersEntity = userRepository.findById(obj.getIdUserOtv());
+        Optional<RoomEntity> roomEntity = roomRepository.findById(obj.getIdRoom());
+        Optional<RefStatusEntity> refStatusEntity = refStatusRepository.findById(obj.getIdStatus());
 
-            devicesRepository.findById(id_devices).map(employee -> {
-                employee.setId_type_devices(typeDeviceDomain.get());
-                employee.setUser_otv(usersDomain.get());
-                employee.setHostname(obj.getHostname());
-                employee.setMac_address(obj.getMac_address());
-                employee.setInventar_number(obj.getInventar_number());
-                employee.setId_room(roomDomain.get());
-                employee.setId_props_port(propsPortDomain);
-                employee.setIs_status(refStatusDomain.get());
+            devicesRepository.findById(idDevices).map(employee -> {
+                employee.setIdTypeDevices(typeDeviceEntity.get());
+                employee.setUserOtv(usersEntity.get());
+                employee.setHostname(obj.getHostName());
+                employee.setMacAddress(obj.getMacAddress());
+                employee.setInventarNumber(obj.getInventarNumber());
+                employee.setIdRoom(roomEntity.get());
+                employee.setIdPropsPort(propsPortEntity);
+                employee.setIsStatus(refStatusEntity.get());
             return devicesRepository.save(employee);
         });
 
-        System.out.println(devicesRepository.findById(obj.getId_devices()));
+        System.out.println(devicesRepository.findById(obj.getIdDevices()));
         return mapperEntityToDTO();
     }
 
     @Override
-    public List<DevicesDTO> create(DevicesDTO obj) {
-        PropsPortDomain propsPortDomain = new PropsPortDomain(obj.getCountOptPort(),obj.getCountEthernetPort());
-        propsPortRepository.save(propsPortDomain);
+    public List<DevicesDto> create(DevicesDto obj) {
+        PropsPortEntity propsPortEntity = new PropsPortEntity(obj.getCountOptPort(),obj.getCountEthernetPort());
+        propsPortRepository.save(propsPortEntity);
 
-        Optional<TypeDeviceDomain> typeDeviceDomain = typeDeviceRepository.findById(obj.getId_type_devices());
-        Optional<UsersDomain> usersDomain = userRepository.findById(obj.getId_user_otv());
-        Optional<RoomDomain> roomDomain = roomRepository.findById(obj.getId_room());
-        Optional<RefStatusDomain> refStatusDomain = refStatusRepository.findById(obj.getId_status());
+        Optional<TypeDeviceEntity> typeDeviceEntity = typeDeviceRepository.findById(obj.getIdTypeDevices());
+        Optional<UsersEntity> usersEntity = userRepository.findById(obj.getIdUserOtv());
+        Optional<RoomEntity> roomEntity = roomRepository.findById(obj.getIdRoom());
+        Optional<RefStatusEntity> refStatusEntity = refStatusRepository.findById(obj.getIdStatus());
 
-        DevicesDomain devicesDomain = new DevicesDomain(typeDeviceDomain.get(),
-                usersDomain.get(), obj.getHostname(),obj.getMac_address(),
-                obj.getInventar_number(), roomDomain.get(), propsPortDomain, refStatusDomain.get());
+        DevicesEntity devicesDomain = new DevicesEntity(typeDeviceEntity.get(),
+
+                usersEntity.get(), obj.getHostName(),obj.getMacAddress(),
+                obj.getInventarNumber(), roomEntity.get(), propsPortEntity, refStatusEntity.get());
 
         devicesRepository.save(devicesDomain);
 
@@ -165,25 +166,25 @@ public class DevicesService implements IDeviceService {
 
     @Override
     public List<NetworkJournalDeviceFilter> getAllDeviceFilter() {
-        List<DevicesDomain> devicesDomains = devicesRepository.getInfoConnectDevice();
+        List<DevicesEntity> devicesDomains = devicesRepository.getInfoConnectDevice();
         List<NetworkJournalDeviceFilter> networkJournalDeviceFilters = new ArrayList<>();
 
-        for (DevicesDomain devices: devicesDomains) {
+        for (DevicesEntity devices: devicesDomains) {
             NetworkJournalDeviceFilter net = new NetworkJournalDeviceFilter();
-            net.setId_devices(devices.getId_devices());
-            net.setHostname(devices.getHostname());
+            net.setIdDevices(devices.getIdDevices());
+            net.setHostName(devices.getHostname());
             networkJournalDeviceFilters.add(net);
         }
         return networkJournalDeviceFilters;
     }
 
-    private List<DevicesDTO> mapperEntityToDTO()
+    private List<DevicesDto> mapperEntityToDTO()
     {
-        List<DevicesDTO> listDTO = new ArrayList<>();
-        List<DevicesDomain> listDom = devicesRepository.findAll();
+        List<DevicesDto> listDTO = new ArrayList<>();
+        List<DevicesEntity> listDom = devicesRepository.findAll();
         for(int i = 0; i<listDom.size(); i++) {
-            DevicesDomain dom = listDom.get(i);
-            listDTO.add(new DevicesDTO(dom));
+            DevicesEntity dom = listDom.get(i);
+            listDTO.add(new DevicesDto(dom));
         }
         return listDTO;
     }

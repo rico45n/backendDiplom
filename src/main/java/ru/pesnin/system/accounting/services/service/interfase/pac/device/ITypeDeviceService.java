@@ -2,14 +2,14 @@ package ru.pesnin.system.accounting.services.service.interfase.pac.device;
 
 
 
-import ru.pesnin.system.accounting.services.entity.devices.TypeDeviceDomain;
+import ru.pesnin.system.accounting.services.entity.devices.TypeDeviceEntity;
 
 import java.util.List;
 
 public interface ITypeDeviceService {
-    List<TypeDeviceDomain> findAll();
-    TypeDeviceDomain read(TypeDeviceDomain obj);
-    List<TypeDeviceDomain> delete(Integer obj);
-    List<TypeDeviceDomain> update(TypeDeviceDomain obj,Integer id);
-    List<TypeDeviceDomain> create(TypeDeviceDomain obj);
+    List<TypeDeviceEntity> findAll();
+    TypeDeviceEntity read(TypeDeviceEntity obj);
+    List<TypeDeviceEntity> delete(Integer obj);
+    List<TypeDeviceEntity> update(TypeDeviceEntity obj, Integer id);
+    List<TypeDeviceEntity> create(TypeDeviceEntity obj);
 }

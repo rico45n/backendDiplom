@@ -3,15 +3,15 @@ package ru.pesnin.system.accounting.services.service.interfase.pac.network;
 
 
 import ru.pesnin.system.accounting.integration.dto.MapperStringToEntity;
-import ru.pesnin.system.accounting.integration.dto.network.NetworkDTO;
+import ru.pesnin.system.accounting.integration.dto.network.NetworkDto;
 
 import java.util.List;
 
 public interface INetworkService {
-    List<NetworkDTO> findAll();
-    NetworkDTO read(NetworkDTO obj);
-    List<NetworkDTO> delete(Integer id_network, NetworkDTO obj);
-    List<NetworkDTO> update(Integer id_network, NetworkDTO obj);
-    List<NetworkDTO> create(NetworkDTO obj);
+    List<NetworkDto> findAll();
+    NetworkDto read(NetworkDto obj);
+    List<NetworkDto> delete(Integer idNetwork, NetworkDto obj);
+    List<NetworkDto> update(Integer idNetwork, NetworkDto obj);
+    List<NetworkDto> create(NetworkDto obj);
     Integer createNetworkDhcp(MapperStringToEntity obj);
 }

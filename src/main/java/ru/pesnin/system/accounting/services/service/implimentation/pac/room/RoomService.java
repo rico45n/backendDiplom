@@ -4,10 +4,10 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.pesnin.system.accounting.integration.dto.room.RoomDTO;
-import ru.pesnin.system.accounting.services.entity.network.NodesDomain;
-import ru.pesnin.system.accounting.services.entity.room.RoomDomain;
-import ru.pesnin.system.accounting.services.entity.user.UsersDomain;
+import ru.pesnin.system.accounting.integration.dto.room.RoomDto;
+import ru.pesnin.system.accounting.services.entity.network.NodesEntity;
+import ru.pesnin.system.accounting.services.entity.room.RoomEntity;
+import ru.pesnin.system.accounting.services.entity.user.UsersEntity;
 import ru.pesnin.system.accounting.services.repository.RefStatusRepository;
 import ru.pesnin.system.accounting.services.repository.devices.DevicesRepository;
 import ru.pesnin.system.accounting.services.repository.network.NodesRepository;
@@ -37,68 +37,76 @@ public class RoomService implements IRoomService {
     private EntityManager entityManager;
 
     @Override
-    public List<RoomDTO> findAll() {
-        return mapperEntityToDTO();
+    public List<RoomDto> findAll() {
+        return mapperEntityToDto();
     }
 
     @Override
-    public RoomDTO read(RoomDTO obj) {
-        return null;
+    public RoomDto read(Integer id) {
+        return mapperEntityToDto(id);
     }
 
     @Override
-    public List<RoomDTO> delete(Integer id_room) {
+    public List<RoomDto> delete(Integer idRoom) {
             try {
-                 devicesRepository.findById_room(id_room).map(
+                 devicesRepository.findByIdRoom(idRoom).map(
                          element->{
-                             element.setId_room(roomRepository.findById(0).get());
+                             element.setIdRoom(roomRepository.findById(0).get());
                              return devicesRepository.save(element);
                          }
                  );
-                 roomRepository.delete(id_room);
+                 roomRepository.delete(idRoom);
 
 
-                return mapperEntityToDTO();
+                return mapperEntityToDto();
             }catch (Exception e){
                 System.out.println(e.getMessage());
-                return mapperEntityToDTO();
+                return mapperEntityToDto();
             }
     }
 
     @Override
-    public List<RoomDTO> update(Integer id_room, RoomDTO new_obj) {
+    public List<RoomDto> update(Integer idRoom, RoomDto newRoom) {
 
-        Optional<UsersDomain> usersDomain = userRepository.findById(new_obj.getId_user_otv());
-        Optional<NodesDomain> nodesDomain = nodesRepository.findById(new_obj.getId_nodes());
+        Optional<UsersEntity> usersDomain = userRepository.findById(newRoom.getIdUserOtv());
+        Optional<NodesEntity> nodesDomain = nodesRepository.findById(newRoom.getIdNodes());
 
-        roomRepository.findById(id_room).map(element->{
-            element.setId_nodes(nodesDomain.get());
-            element.setName_room(new_obj.getName_room());
-            element.setType_room(new_obj.getType_room());
-            element.setUser_otv(usersDomain.get());
+        roomRepository.findById(idRoom).map(element->{
+            element.setIdNodes(nodesDomain.get());
+            element.setNameRoom(newRoom.getNameRoom());
+            element.setTypeRoom(newRoom.getTypeRoom());
+            element.setUserOtv(usersDomain.get());
             return roomRepository.save(element);
         });
 
-        return mapperEntityToDTO();
+        return mapperEntityToDto();
     }
 
     @Override
-    public List<RoomDTO> create(RoomDTO obj) {
-        Optional<UsersDomain> usersDomain = userRepository.findById(obj.getId_user_otv());
-        Optional<NodesDomain> nodesDomain = nodesRepository.findById(obj.getId_nodes());
+    public List<RoomDto> create(RoomDto obj) {
+        Optional<UsersEntity> usersEntity = userRepository.findById(obj.getIdUserOtv());
+        Optional<NodesEntity> nodesEntity = nodesRepository.findById(obj.getIdNodes());
 
-        roomRepository.save(new RoomDomain(obj.getName_room(), usersDomain.get(), obj.getType_room(), nodesDomain.get()));
-        return mapperEntityToDTO();
+        roomRepository.save(new RoomEntity(obj.getNameRoom(), usersEntity.get(), obj.getTypeRoom(), nodesEntity.get()));
+        return mapperEntityToDto();
     }
 
-    private List<RoomDTO> mapperEntityToDTO()
+    private List<RoomDto> mapperEntityToDto()
     {
-        List<RoomDTO> listDTO = new ArrayList<>();
-        List<RoomDomain> listDom = roomRepository.findAll();
-        for(int i = 0; i < listDom.size(); i++) {
-            RoomDomain obj_dom = listDom.get(i);
-            listDTO.add(new RoomDTO(obj_dom));
+        List<RoomDto> listDto = new ArrayList<>();
+        List<RoomEntity> listEntity = roomRepository.findAll();
+        for(int i = 0; i < listEntity.size(); i++) {
+            RoomEntity obj_dom = listEntity.get(i);
+            listDto.add(new RoomDto(obj_dom));
         }
-        return listDTO;
+        return listDto;
     }
+
+    private RoomDto mapperEntityToDto(Integer id)
+    {
+        Optional<RoomEntity> listEntity = roomRepository.findById(id);
+        return new RoomDto(listEntity.get());
+    }
+
+
 }

@@ -2,13 +2,13 @@ package ru.pesnin.system.accounting.services.repository.devices;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import ru.pesnin.system.accounting.services.entity.devices.DevicesDomain;
+import ru.pesnin.system.accounting.services.entity.devices.DevicesEntity;
 
 
 import java.util.List;
 import java.util.Optional;
 
-public interface DevicesRepository extends JpaRepository<DevicesDomain, Integer> {
+public interface DevicesRepository extends JpaRepository<DevicesEntity, Integer> {
 
     @Query(value = "UPDATE network.devices SET is_status = 2 WHERE id_devices=?1\n; " +
             "Update  network.configuration SET is_status = 2 WHERE id_device = ?1\n;" +
@@ -16,12 +16,12 @@ public interface DevicesRepository extends JpaRepository<DevicesDomain, Integer>
     boolean delete(Integer obj);
 
     @Query(value = "select * from network.devices d where cast(d.id_room as varchar )= cast(?1 as varchar)", nativeQuery = true)
-    Optional<DevicesDomain> findById_room(Integer id);
+    Optional<DevicesEntity> findByIdRoom(Integer id);
 
     @Query(
             value = "select * from network.devices d ",
             nativeQuery = true
     )
-    List<DevicesDomain> getInfoConnectDevice();
+    List<DevicesEntity> getInfoConnectDevice();
 }
 

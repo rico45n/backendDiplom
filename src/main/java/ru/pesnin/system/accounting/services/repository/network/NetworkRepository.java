@@ -2,12 +2,12 @@ package ru.pesnin.system.accounting.services.repository.network;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import ru.pesnin.system.accounting.services.entity.network.NetworkDomain;
+import ru.pesnin.system.accounting.services.entity.network.NetworkEntity;
 
 
 import java.util.List;
 
-public interface NetworkRepository extends JpaRepository<NetworkDomain, Integer> {
+public interface NetworkRepository extends JpaRepository<NetworkEntity, Integer> {
     @Query(value = "select \n" +
             "\tnj.ip_address\n" +
             "from network.network_journal nj \n" +
@@ -19,5 +19,5 @@ public interface NetworkRepository extends JpaRepository<NetworkDomain, Integer>
             value = "select * from network.network n where n.id_pool_address = ?1",
             nativeQuery = true
     )
-    List<NetworkDomain> findBy_AndId_pool_address(Integer id_pool);
+    List<NetworkEntity> findByAndIdPoolAddress(Integer id_pool);
 }

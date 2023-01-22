@@ -35,7 +35,7 @@ public class IpService implements IpServiceI {
 
             List<String> bitMask = new ArrayList<>();
             for (String elementArrayMask : arrayMask) {
-                StringBuffer binMask = new StringBuffer();
+                StringBuilder binMask = new StringBuilder();
                 char[] charsMask = Integer.toBinaryString(Integer.parseInt(elementArrayMask)).toCharArray();
                 for (char i : charsMask) {
                     if (i == '0') {

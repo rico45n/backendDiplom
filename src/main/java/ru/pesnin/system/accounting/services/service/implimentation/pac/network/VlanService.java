@@ -2,7 +2,7 @@ package ru.pesnin.system.accounting.services.service.implimentation.pac.network;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.pesnin.system.accounting.services.entity.network.VlanDomain;
+import ru.pesnin.system.accounting.services.entity.network.VlanEntity;
 import ru.pesnin.system.accounting.services.repository.RefStatusRepository;
 import ru.pesnin.system.accounting.services.repository.network.VlanRepository;
 import ru.pesnin.system.accounting.services.service.interfase.pac.network.IVlanService;
@@ -19,25 +19,25 @@ public class VlanService implements IVlanService {
     private RefStatusRepository refStatusRepository;
 
     @Override
-    public List<VlanDomain> findAll() {
+    public List<VlanEntity> findAll() {
         return vlanRepository.findAll();
     }
 
     @Override
-    public VlanDomain read(VlanDomain obj) {
+    public VlanEntity read(VlanEntity obj) {
         return null;
     }
 
     @Override
-    public List<VlanDomain> delete(Integer id_vlan, VlanDomain obj) {
+    public List<VlanEntity> delete(Integer idVlan, VlanEntity obj) {
         try {
-            if(vlanRepository.findById(id_vlan).get().getIs_status().getId_status() == 2) {
+            if(vlanRepository.findById(idVlan).get().getIsStatus().getIdStatus() == 2) {
                 return vlanRepository.findAll();
             }
             else {
-                vlanRepository.findById(id_vlan).map(vlanDomain -> {
-                    vlanDomain.setIs_status(refStatusRepository.findById(2).get());
-                    return vlanRepository.save(vlanDomain);
+                vlanRepository.findById(idVlan).map(vlanEntity -> {
+                    vlanEntity.setIsStatus(refStatusRepository.findById(2).get());
+                    return vlanRepository.save(vlanEntity);
                 });
                 return vlanRepository.findAll();
             }
@@ -48,17 +48,17 @@ public class VlanService implements IVlanService {
     }
 
     @Override
-    public List<VlanDomain> update(Integer id_vlan, VlanDomain obj) {
+    public List<VlanEntity> update(Integer idVlan, VlanEntity obj) {
         try {
-                if (vlanRepository.findById(id_vlan).get().getIs_status().getId_status() == 2) {
+                if (vlanRepository.findById(idVlan).get().getIsStatus().getIdStatus() == 2) {
                     return vlanRepository.findAll();
                 }
                 else {
-                    vlanRepository.findById(id_vlan).map(vlanDomain -> {
-                        vlanDomain.setVlan_name(obj.getVlan_name());
-                        vlanDomain.setVlan_number(obj.getVlan_number());
-                        vlanDomain.setIs_status(refStatusRepository.findById(1).get());
-                        return vlanRepository.save(vlanDomain);
+                    vlanRepository.findById(idVlan).map(vlanEntity -> {
+                        vlanEntity.setVlanName(obj.getVlanName());
+                        vlanEntity.setVlanNumber(obj.getVlanNumber());
+                        vlanEntity.setIsStatus(refStatusRepository.findById(1).get());
+                        return vlanRepository.save(vlanEntity);
                     });
                     return vlanRepository.findAll();
                 }
@@ -69,14 +69,14 @@ public class VlanService implements IVlanService {
     }
 
     @Override
-    public List<VlanDomain> create(VlanDomain obj) {
+    public List<VlanEntity> create(VlanEntity obj) {
         try {
-            VlanDomain vlanDomain = new VlanDomain();
-            vlanDomain.setVlan(
+            VlanEntity vlanEntity = new VlanEntity();
+            vlanEntity.setVlan(
                     obj,
                     refStatusRepository.findById(1).get()
             );
-            vlanRepository.save(vlanDomain);
+            vlanRepository.save(vlanEntity);
             return vlanRepository.findAll();
 
         } catch (Exception e) {

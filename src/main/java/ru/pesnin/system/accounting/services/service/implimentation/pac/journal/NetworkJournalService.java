@@ -3,13 +3,14 @@ package ru.pesnin.system.accounting.services.service.implimentation.pac.journal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.pesnin.system.accounting.integration.dto.filter.NetworkJournalIpAddressFilter;
-import ru.pesnin.system.accounting.integration.dto.journal.NetworkJournalDTO;
-import ru.pesnin.system.accounting.services.entity.journal.NetworkJournalDomain;
-import ru.pesnin.system.accounting.services.entity.network.NetworkDomain;
+import ru.pesnin.system.accounting.integration.dto.journal.NetworkJournalDto;
+import ru.pesnin.system.accounting.services.entity.journal.NetworkJournalEntity;
+import ru.pesnin.system.accounting.services.entity.network.NetworkEntity;
 import ru.pesnin.system.accounting.services.repository.RefStatusRepository;
 import ru.pesnin.system.accounting.services.repository.devices.DevicesRepository;
 import ru.pesnin.system.accounting.services.repository.journal.NetworkJournalRepository;
-import ru.pesnin.system.accounting.services.repository.network.DHСP_poolRepository;
+
+import ru.pesnin.system.accounting.services.repository.network.DhcpPoolRepository;
 import ru.pesnin.system.accounting.services.repository.network.NetworkRepository;
 import ru.pesnin.system.accounting.services.repository.user.UserRepository;
 import ru.pesnin.system.accounting.services.service.interfase.pac.ipservice.IpServiceI;
@@ -34,91 +35,90 @@ public class NetworkJournalService implements INetworkJournalService {
     @Autowired
     private IpServiceI ipService;
     @Autowired
-    private DHСP_poolRepository dhсp_poolRepository;
+    private DhcpPoolRepository dhcpPoolRepository;
 
     @Override
-    public List<NetworkJournalDTO> findAll() {
-        return mapperEntityToDTO();
+    public List<NetworkJournalDto> findAll() {
+        return mapperEntityToDto();
     }
 
     @Override
-    public NetworkJournalDTO read(NetworkJournalDTO obj) {
+    public NetworkJournalDto read(NetworkJournalDto obj) {
         return null;
     }
 
     @Override
-    public List<NetworkJournalDTO> delete(Integer id_network_journal, NetworkJournalDTO new_obj) {
+    public List<NetworkJournalDto> delete(Integer idNetworkJournal, NetworkJournalDto newObj) {
         try {
-            networkJournalRepository.findById(id_network_journal).map(networkJournalDomain -> {
-                networkJournalDomain.setDate_old(new Date());
-                networkJournalDomain.setId_user_old(userRepository.findById(new_obj.getId_user_reg()).get());
-                networkJournalDomain.setIs_status(refStatusRepository.findById(2).get());
+            networkJournalRepository.findById(idNetworkJournal).map(networkJournalDomain -> {
+                networkJournalDomain.setDateOld(new Date());
+                networkJournalDomain.setIdUserOld(userRepository.findById(newObj.getIdUserReg()).get());
+                networkJournalDomain.setIsStatus(refStatusRepository.findById(2).get());
                 return networkJournalRepository.save(networkJournalDomain);
             });
-            return mapperEntityToDTO();
+            return mapperEntityToDto();
         }catch (Exception e){
-            return mapperEntityToDTO();
+            return mapperEntityToDto();
         }
     }
 
     @Override
-    public List<NetworkJournalDTO> update(Integer id_network_journal , NetworkJournalDTO obj) {
+    public List<NetworkJournalDto> update(Integer idNetworkJournal , NetworkJournalDto obj) {
         try{
-            networkJournalRepository.findById(id_network_journal).map(networkJournalDomain -> {
-                networkJournalDomain.setDate_old(new Date());
-                networkJournalDomain.setId_user_old(userRepository.findById(obj.getId_user_reg()).get());
-                networkJournalDomain.setIs_status(refStatusRepository.findById(2).get());
-                return networkJournalRepository.save(networkJournalDomain);
+            networkJournalRepository.findById(idNetworkJournal).map(networkJournalEntity -> {
+                networkJournalEntity.setDateOld(new Date());
+                networkJournalEntity.setIdUserOld(userRepository.findById(obj.getIdUserReg()).get());
+                networkJournalEntity.setIsStatus(refStatusRepository.findById(2).get());
+                return networkJournalRepository.save(networkJournalEntity);
             });
-            NetworkJournalDomain networkJournalDomain = new NetworkJournalDomain();
-            networkJournalDomain.setNetworkJournalDomain(
-                    networkRepository.findById(obj.getId_network()).get(),
+            NetworkJournalEntity networkJournalEntity = new NetworkJournalEntity();
+            networkJournalEntity.setNetworkJournalEntity(
+                    networkRepository.findById(obj.getIdNetwork()).get(),
                     obj,
-                    userRepository.findById(obj.getId_user_reg()).get(),
+                    userRepository.findById(obj.getIdUserReg()).get(),
                     userRepository.findById(0).get(),
-                    devicesRepository.findById(obj.getId_devices()).get(),
+                    devicesRepository.findById(obj.getIdDevices()).get(),
                     refStatusRepository.findById(1).get());
 
-            networkJournalRepository.save(networkJournalDomain);
-            return mapperEntityToDTO();
+            networkJournalRepository.save(networkJournalEntity);
+            return mapperEntityToDto();
         }catch (Exception e) {
-            return mapperEntityToDTO();
+            return mapperEntityToDto();
         }
     }
 
     @Override
-    public List<NetworkJournalDTO> create(NetworkJournalDTO obj) {
+    public List<NetworkJournalDto> create(NetworkJournalDto obj) {
         try{
-            NetworkJournalDomain networkJournalDomain = new NetworkJournalDomain();
-            networkJournalDomain.setNetworkJournalDomain(
-                    networkRepository.findById(obj.getId_network()).get(),
+            NetworkJournalEntity networkJournalEntity = new NetworkJournalEntity();
+            networkJournalEntity.setNetworkJournalEntity(
+                    networkRepository.findById(obj.getIdNetwork()).get(),
                     obj,
-                    userRepository.findById(obj.getId_user_reg()).get(),
+                    userRepository.findById(obj.getIdUserReg()).get(),
                     userRepository.findById(0).get(),
-                    devicesRepository.findById(obj.getId_devices()).get(),
+                    devicesRepository.findById(obj.getIdDevices()).get(),
                     refStatusRepository.findById(1).get());
 
-            networkJournalRepository.save(networkJournalDomain);
-            return mapperEntityToDTO();
+            networkJournalRepository.save(networkJournalEntity);
+            return mapperEntityToDto();
         }catch (Exception e) {
             System.out.println(e.getMessage());
-            return mapperEntityToDTO();
+            return mapperEntityToDto();
         }
     }
 
     @Override
     public List<NetworkJournalIpAddressFilter> findByIpAddress(Integer id_network) {
         try {
-
-            String netAddrIP = networkRepository.findById(id_network).get().getIp_address_network();
+            String netAddrIP = networkRepository.findById(id_network).get().getIpAddressNetwork();
             String netAddrIPend = ipService.netAddress(networkRepository.findById(id_network).get().getNetworkInfo());
 
-            NetworkDomain networkDomain = networkRepository.findById(id_network).get();
+            NetworkEntity networkDomain = networkRepository.findById(id_network).get();
             List<String> ListIpAddressNet = new ArrayList<>();
             List<String> ListDHCPIPAddress = new ArrayList<>();
 
             try {
-                String netAddrDHCP = dhсp_poolRepository.findById(networkDomain.getId_DHCP_pool().getId_DHCP_pool()).get().getPoolIP();
+                String netAddrDHCP = dhcpPoolRepository.findById(networkDomain.getIdDhcpPool().getIdDhcpPool()).get().getPoolIP();
 
                 String[] dhcpPoolAddress = netAddrDHCP.replaceAll(" ", "").split("-");
 
@@ -136,11 +136,11 @@ public class NetworkJournalService implements INetworkJournalService {
                     }
                 }
 
-                List<String> ip_address_from_db = networkJournalRepository.findBy_ipAddress();
+                List<String> ipAddressFromDb = networkJournalRepository.findBy_ipAddress();
 
-                for (int i = 0; i < ip_address_from_db.size(); i++){
+                for (int i = 0; i < ipAddressFromDb.size(); i++){
                     for (int j = 0; j < ListDHCPIPAddress.size(); j++){
-                        if(equals(ListDHCPIPAddress.get(j)) == equals(ip_address_from_db.get(i))){
+                        if(equals(ListDHCPIPAddress.get(j)) == equals(ipAddressFromDb.get(i))){
                             ListDHCPIPAddress.remove(j);
                             break;
                         }
@@ -166,15 +166,15 @@ public class NetworkJournalService implements INetworkJournalService {
         }
     }
 
-    private List<NetworkJournalDTO> mapperEntityToDTO()
+    private List<NetworkJournalDto> mapperEntityToDto()
     {
-        List<NetworkJournalDTO> listDTO = new ArrayList<>();
-        List<NetworkJournalDomain> listDom = networkJournalRepository.findAll();
-        for(int i = 0; i<listDom.size(); i++) {
-            NetworkJournalDomain obj_dom = listDom.get(i);
-            listDTO.add(new NetworkJournalDTO(obj_dom));
+        List<NetworkJournalDto> listDto = new ArrayList<>();
+        List<NetworkJournalEntity> listEntity = networkJournalRepository.findAll();
+        for(int i = 0; i<listEntity.size(); i++) {
+            NetworkJournalEntity obj_dom = listEntity.get(i);
+            listDto.add(new NetworkJournalDto(obj_dom));
         }
-        return listDTO;
+        return listDto;
     }
 
 

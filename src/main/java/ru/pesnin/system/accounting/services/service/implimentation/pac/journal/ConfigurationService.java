@@ -2,8 +2,8 @@ package ru.pesnin.system.accounting.services.service.implimentation.pac.journal;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.pesnin.system.accounting.integration.dto.journal.ConfigurationDTO;
-import ru.pesnin.system.accounting.services.entity.journal.ConfigurationDomain;
+import ru.pesnin.system.accounting.integration.dto.journal.ConfigurationDto;
+import ru.pesnin.system.accounting.services.entity.journal.ConfigurationEntity;
 import ru.pesnin.system.accounting.services.repository.RefStatusRepository;
 import ru.pesnin.system.accounting.services.repository.devices.DevicesRepository;
 import ru.pesnin.system.accounting.services.repository.journal.ConfigurationRepository;
@@ -28,84 +28,84 @@ public class ConfigurationService implements IConfigurationService {
 
 
     @Override
-    public List<ConfigurationDTO> findAll() {
-        return mapperEntityToDTO();
+    public List<ConfigurationDto> findAll() {
+        return mapperEntityToDto();
     }
 
     @Override
-    public ConfigurationDTO read(ConfigurationDTO obj) {
+    public ConfigurationDto read(ConfigurationDto obj) {
         return null;
     }
 
     @Override
-    public List<ConfigurationDTO> delete(Integer id_config, Integer user_id) {
+    public List<ConfigurationDto> delete(Integer id_config, Integer user_id) {
         configurationRepository.findById(id_config).map(deleteConfig->{
-            deleteConfig.setId_user_old(userRepository.findById(user_id).get());
-            deleteConfig.setDate_old(new Date());
-            deleteConfig.setIs_status(refStatusRepository.findById(2).get());
+            deleteConfig.setIdUserOld(userRepository.findById(user_id).get());
+            deleteConfig.setDateOld(new Date());
+            deleteConfig.setIsStatus(refStatusRepository.findById(2).get());
             return configurationRepository.save(deleteConfig);
         });
-        return mapperEntityToDTO();
+        return mapperEntityToDto();
     }
 
     @Override
-    public List<ConfigurationDTO> update(Integer id_config, ConfigurationDTO new_obj) {
+    public List<ConfigurationDto> update(Integer id_config, ConfigurationDto newObj) {
 
-        configurationRepository.findById(id_config).map(configurationDomain -> {
-                configurationDomain
+        configurationRepository.findById(id_config).map(configurationEntity -> {
+                configurationEntity
                         .setConfiguration(
-                                devicesRepository.findById(new_obj.getId_device()).get(),
-                                new_obj.getConfig_first(),
-                                new_obj.getConfig_last(),
-                                new_obj.getDeference(),
-                                userRepository.findById(new_obj.getId_user_reg()).get(),
-                                userRepository.findById(new_obj.getId_user_old()).get(),
+                                devicesRepository.findById(newObj.getIdDevice()).get(),
+                                newObj.getConfigFirst(),
+                                newObj.getConfigLast(),
+                                newObj.getDeference(),
+                                userRepository.findById(newObj.getIdUserReg()).get(),
+                                userRepository.findById(newObj.getIdUserOld()).get(),
                                 new Date(),
                                 new Date(),
                                 refStatusRepository.findById(2).get()
                         );
-                return configurationRepository.save(configurationDomain);
+                return configurationRepository.save(configurationEntity);
            });
 
-           ConfigurationDomain configDom = new ConfigurationDomain();
-           configDom.setConfiguration(devicesRepository.findById(new_obj.getId_device()).get(),
-                    new_obj.getConfig_last(),
+           ConfigurationEntity configDom = new ConfigurationEntity();
+           configDom.setConfiguration(devicesRepository.findById(newObj.getIdDevice()).get(),
+                    newObj.getConfigLast(),
                    null,
                     null,
-                    userRepository.findById(new_obj.getId_user_reg()).get(),
+                    userRepository.findById(newObj.getIdUserReg()).get(),
                     userRepository.findById(0).get(),
                     new Date(),
                     null,
                     refStatusRepository.findById(1).get());
                 configurationRepository.save(configDom);
-            return mapperEntityToDTO();
+            return mapperEntityToDto();
     }
 
     @Override
-    public List<ConfigurationDTO> create(ConfigurationDTO obj) {
-        ConfigurationDomain createConfigDom = new ConfigurationDomain();
-        createConfigDom.setConfiguration(
-                devicesRepository.findById(obj.getId_device()).get(),
-                obj.getConfig_first(),
+    public List<ConfigurationDto> create(ConfigurationDto obj) {
+        ConfigurationEntity configurationEntity = new ConfigurationEntity();
+        configurationEntity.setConfiguration(
+                devicesRepository.findById(obj.getIdDevice()).get(),
+                obj.getConfigFirst(),
                 null,
                 null,
-                userRepository.findById(obj.getId_user_reg()).get(),
+                userRepository.findById(obj.getIdUserReg()).get(),
                 userRepository.findById(0).get(),
                 new Date(),
                 null,
                 refStatusRepository.findById(1).get());
-        configurationRepository.save(createConfigDom);
-        return mapperEntityToDTO();
+        configurationRepository.save(configurationEntity);
+        return mapperEntityToDto();
     }
 
-    private List<ConfigurationDTO> mapperEntityToDTO()
+    private List<ConfigurationDto> mapperEntityToDto()
     {
-        List<ConfigurationDTO> listDTO = new ArrayList<>();
-        List<ConfigurationDomain> listDom = configurationRepository.findAll();
-        for(int i = 0; i<listDom.size(); i++) {
-            ConfigurationDomain obj_dom = listDom.get(i);
-            listDTO.add(new ConfigurationDTO(obj_dom));
+        List<ConfigurationDto> listDto = new ArrayList<>();
+        List<ConfigurationEntity> listEntity = configurationRepository.findAll();
+        for(int i = 0; i<listEntity.size(); i++) {
+            ConfigurationEntity objEntity = listEntity.get(i);
+            listDto.add(new ConfigurationDto(objEntity));
         }
-        return listDTO;
+        return listDto;
     }
 }

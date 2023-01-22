@@ -1,31 +1,24 @@
 package ru.pesnin.system.accounting.integration.dto;
 
-public class MapperStringToEntity {
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class MapperStringToEntity {
+    @JsonProperty("id_object")
     private Integer idObject;
+    @JsonProperty("body_object")
     private String bodyObject;
 
-    public MapperStringToEntity(Integer idObject, String bodyObject) {
-        this.idObject = idObject;
-        this.bodyObject = bodyObject;
-    }
-
-    public MapperStringToEntity() {
-    }
-
-    public Integer getIdObject() {
-        return idObject;
-    }
-
-    public void setIdObject(Integer idObject) {
-        this.idObject = idObject;
-    }
-
-    public String getBodyObject() {
-        return bodyObject;
-    }
-
-    public void setBodyObject(String bodyObject) {
-        this.bodyObject = bodyObject;
+    @Override
+    public String toString() {
+        return "MapperStringToEntity{" +
+                "idObject=" + idObject +
+                ", bodyObject='" + bodyObject + '\'' +
+                '}';
     }
 }

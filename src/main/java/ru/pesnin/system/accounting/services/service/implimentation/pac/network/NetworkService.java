@@ -3,14 +3,14 @@ package ru.pesnin.system.accounting.services.service.implimentation.pac.network;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.pesnin.system.accounting.integration.dto.MapperStringToEntity;
-import ru.pesnin.system.accounting.integration.dto.network.NetworkDTO;
-import ru.pesnin.system.accounting.services.entity.journal.NetworkJournalDomain;
-import ru.pesnin.system.accounting.services.entity.network.NetworkDomain;
+import ru.pesnin.system.accounting.integration.dto.network.NetworkDto;
+import ru.pesnin.system.accounting.services.entity.journal.NetworkJournalEntity;
+import ru.pesnin.system.accounting.services.entity.network.NetworkEntity;
 import ru.pesnin.system.accounting.services.repository.RefStatusRepository;
 import ru.pesnin.system.accounting.services.repository.journal.NetworkJournalRepository;
-import ru.pesnin.system.accounting.services.repository.network.DHСP_poolRepository;
+import ru.pesnin.system.accounting.services.repository.network.DhcpPoolRepository;
 import ru.pesnin.system.accounting.services.repository.network.NetworkRepository;
-import ru.pesnin.system.accounting.services.repository.network.Pool_address_Repository;
+import ru.pesnin.system.accounting.services.repository.network.PoolAddressRepository;
 import ru.pesnin.system.accounting.services.repository.network.VlanRepository;
 import ru.pesnin.system.accounting.services.repository.user.UserRepository;
 import ru.pesnin.system.accounting.services.service.interfase.pac.ipservice.IpServiceI;
@@ -26,11 +26,11 @@ public class NetworkService implements INetworkService {
     @Autowired
     private NetworkRepository networkRepository;
     @Autowired
-    private DHСP_poolRepository dhсp_poolRepository;
+    private DhcpPoolRepository dhcpPoolRepository;
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private Pool_address_Repository pool_address_repository;
+    private PoolAddressRepository pool_address_repository;
     @Autowired
     private VlanRepository vlanRepository;
     @Autowired
@@ -42,95 +42,95 @@ public class NetworkService implements INetworkService {
     private IpServiceI ipService;
 
     @Override
-    public List<NetworkDTO> findAll() {
-        return mapperEntityToDTO();
+    public List<NetworkDto> findAll() {
+        return mapperEntityToDto();
     }
 
     @Override
-    public NetworkDTO read(NetworkDTO obj) {
+    public NetworkDto read(NetworkDto obj) {
         return null;
     }
 
     @Override
-    public List<NetworkDTO> delete(Integer id_network, NetworkDTO obj) {
-        if(networkRepository.findById(id_network).get().getIs_status().getId_status() == 2)
+    public List<NetworkDto> delete(Integer idNetwork, NetworkDto obj) {
+        if(networkRepository.findById(idNetwork).get().getIsStatus().getIdStatus() == 2)
         {
-            return mapperEntityToDTO();
+            return mapperEntityToDto();
         }
         else {
             try {
-                networkRepository.findById(id_network).map(networkDomain -> {
-                    networkDomain.setDate_old(new Date());
-                    networkDomain.setId_user_old(userRepository.findById(obj.getId_user_old()).get());
-                    networkDomain.setIs_status(refStatusRepository.findById(2).get());
-                    return networkRepository.save(networkDomain);
+                networkRepository.findById(idNetwork).map(networkEntity -> {
+                    networkEntity.setDateOld(new Date());
+                    networkEntity.setIdUserOld(userRepository.findById(obj.getIdUserOld()).get());
+                    networkEntity.setIsStatus(refStatusRepository.findById(2).get());
+                    return networkRepository.save(networkEntity);
                 });
-                List<NetworkJournalDomain> networkJournalDomains = networkJournalRepository.CascadeDelNet(id_network);
-                for(NetworkJournalDomain networkJournalDomain : networkJournalDomains){
-                    networkJournalDomain.setIs_status(refStatusRepository.findById(2).get());
-                    networkJournalDomain.setId_user_old(userRepository.findById(obj.getId_user_old()).get());
-                    networkJournalDomain.setDate_old(new Date());
-                    networkJournalRepository.save(networkJournalDomain);
+                List<NetworkJournalEntity> networkJournalEntities = networkJournalRepository.CascadeDelNet(idNetwork);
+                for(NetworkJournalEntity networkJournalEntity : networkJournalEntities){
+                    networkJournalEntity.setIsStatus(refStatusRepository.findById(2).get());
+                    networkJournalEntity.setIdUserOld(userRepository.findById(obj.getIdUserOld()).get());
+                    networkJournalEntity.setDateOld(new Date());
+                    networkJournalRepository.save(networkJournalEntity);
                 }
-                return mapperEntityToDTO();
+                return mapperEntityToDto();
             } catch (Exception e) {
                 System.out.println(e.getMessage());
-                return mapperEntityToDTO();
+                return mapperEntityToDto();
             }
         }
     }
 
     @Override
-    public List<NetworkDTO> update(Integer id_network, NetworkDTO obj) {
-        if(networkRepository.findById(id_network).get().getIs_status().getId_status() == 2) {
-            return mapperEntityToDTO();
+    public List<NetworkDto> update(Integer idNetwork, NetworkDto obj) {
+        if(networkRepository.findById(idNetwork).get().getIsStatus().getIdStatus() == 2) {
+            return mapperEntityToDto();
         }
         else {
             try {
-                networkRepository.findById(id_network).map(networkDomain -> {
-                    networkDomain.setDate_old(new Date());
-                    networkDomain.setId_user_old(userRepository.findById(obj.getId_user_old()).get());
-                    networkDomain.setIs_status(refStatusRepository.findById(2).get());
-                    return networkRepository.save(networkDomain);
+                networkRepository.findById(idNetwork).map(networkEntity -> {
+                    networkEntity.setDateOld(new Date());
+                    networkEntity.setIdUserOld(userRepository.findById(obj.getIdUserOld()).get());
+                    networkEntity.setIsStatus(refStatusRepository.findById(2).get());
+                    return networkRepository.save(networkEntity);
                 });
 
-                NetworkDomain network = new NetworkDomain();
-                network.setNewNetworkDomain(
+                NetworkEntity network = new NetworkEntity();
+                network.setNewNetworkEntity(
                         obj,
-                        pool_address_repository.findById(obj.getId_pool_address()).get(),
-                        userRepository.findById(obj.getId_user_reg()).get(),
-                        userRepository.findById(obj.getId_user_old()).get(),
-                        vlanRepository.findById(obj.getId_vlan()).get(),
-                        dhсp_poolRepository.findById(obj.getId_dhcp_pool()).get(),
+                        pool_address_repository.findById(obj.getIdPoolAddress()).get(),
+                        userRepository.findById(obj.getIdUserReg()).get(),
+                        userRepository.findById(obj.getIdUserOld()).get(),
+                        vlanRepository.findById(obj.getIdVlan()).get(),
+                        dhcpPoolRepository.findById(obj.getIdDhcpPool()).get(),
                         refStatusRepository.findById(1).get()
                 );
                 networkRepository.save(network);
-                return mapperEntityToDTO();
+                return mapperEntityToDto();
             } catch (Exception e) {
                 System.out.println(e.getMessage());
-                return mapperEntityToDTO();
+                return mapperEntityToDto();
             }
         }
     }
 
     @Override
-    public List<NetworkDTO> create(NetworkDTO obj) {
+    public List<NetworkDto> create(NetworkDto obj) {
         try {
-            NetworkDomain networkDomain = new NetworkDomain();
-            networkDomain.setNewNetworkDomain(
+            NetworkEntity networkEntity = new NetworkEntity();
+            networkEntity.setNewNetworkEntity(
                     obj,
-                    pool_address_repository.findById(obj.getId_pool_address()).get(),
-                    userRepository.findById(obj.getId_user_reg()).get(),
+                    pool_address_repository.findById(obj.getIdPoolAddress()).get(),
+                    userRepository.findById(obj.getIdUserReg()).get(),
                     userRepository.findById(0).get(),
-                    vlanRepository.findById(obj.getId_vlan()).get(),
-                    dhсp_poolRepository.findById(obj.getId_dhcp_pool()).get(),
+                    vlanRepository.findById(obj.getIdVlan()).get(),
+                    dhcpPoolRepository.findById(obj.getIdDhcpPool()).get(),
                     refStatusRepository.findById(1).get()
             );
-            networkRepository.save(networkDomain);
-            return mapperEntityToDTO();
+            networkRepository.save(networkEntity);
+            return mapperEntityToDto();
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return mapperEntityToDTO();
+            return mapperEntityToDto();
         }
     }
 
@@ -139,23 +139,21 @@ public class NetworkService implements INetworkService {
         return null;
     }
 
-    private List<NetworkDTO> mapperEntityToDTO()
+    private List<NetworkDto> mapperEntityToDto()
     {
-        List<NetworkDTO> listNetDTO = new ArrayList<>();
-        List<NetworkDomain> listNetDom = networkRepository.findAll();
-        for(int i = 0; i < listNetDom.size(); i++) {
-            NetworkDomain net_dom = listNetDom.get(i);
+        List<NetworkDto> listNetDto = new ArrayList<>();
+        List<NetworkEntity> listNetEntity = networkRepository.findAll();
+        for (NetworkEntity networkEntity : listNetEntity) {
+            String endIpAddress = ipService.netAddress(networkEntity.getNetworkInfo());
 
-            String endIpAddress = ipService.netAddress(net_dom.getNetworkInfo());
+            float status = (((float) networkRepository.getInitIp_inNetwork(networkEntity.getIpAddressNetwork()).size() /
+                    (float) ipService.getAllIpAddress(networkEntity.getIpAddressNetwork(), endIpAddress).size()) * 100);
 
-            float status = (((float) networkRepository.getInitIp_inNetwork(net_dom.getIp_address_network()).size() /
-                    (float)ipService.getAllIpAddress(net_dom.getIp_address_network(), endIpAddress).size())*100);
+            String name_status = networkRepository.getInitIp_inNetwork(networkEntity.getIpAddressNetwork()).size() + " из " +
+                    ipService.getAllIpAddress(networkEntity.getIpAddressNetwork(), endIpAddress).size();
 
-            String name_status =  networkRepository.getInitIp_inNetwork(net_dom.getIp_address_network()).size()+" из "+
-                    ipService.getAllIpAddress(net_dom.getIp_address_network(), endIpAddress).size();
-
-            listNetDTO.add(new NetworkDTO(net_dom, (float)((float) Math.round(status * 100.0) / 100.0), name_status));
+            listNetDto.add(new NetworkDto(networkEntity, (float) ((float) Math.round(status * 100.0) / 100.0), name_status));
         }
-        return listNetDTO;
+        return listNetDto;
     }
 }
