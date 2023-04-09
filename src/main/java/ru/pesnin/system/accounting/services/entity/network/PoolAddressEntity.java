@@ -1,11 +1,12 @@
 package ru.pesnin.system.accounting.services.entity.network;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 import ru.pesnin.system.accounting.integration.dto.network.PoolAddressDto;
-import ru.pesnin.system.accounting.services.entity.RefStatusEntity;
 import ru.pesnin.system.accounting.services.entity.user.UsersEntity;
 
 import java.util.Date;
@@ -14,6 +15,8 @@ import java.util.Date;
 @Data
 @Table(schema = "network", name = "Pool_address")
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class PoolAddressEntity {
 
     @Id
@@ -30,14 +33,6 @@ public class PoolAddressEntity {
     @Column(name = "ip_addres_end")
     private String ipAddresEnd;
 
-    @Column(name = "date_reg")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy")
-    private Date dateReg;
-
-    @Column(name = "date_old")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy")
-    private Date dateOld;
-
     @ManyToOne
     @JoinColumn(name = "id_user_old",referencedColumnName = "user_id")
     private UsersEntity idUserOld;
@@ -46,19 +41,13 @@ public class PoolAddressEntity {
     @JoinColumn(name = "id_user_reg",referencedColumnName = "user_id")
     private UsersEntity idUserReg;
 
-    @ManyToOne
-    @JoinColumn(name = "is_status",referencedColumnName ="id_status" )
-    private RefStatusEntity isStatus;
 
-    public void setNewPool(PoolAddressDto dto, UsersEntity userReg, UsersEntity userOld, RefStatusEntity refStatusEntity, Date dateReg, Date dateOld ){
+    public void setNewPool(PoolAddressDto dto, UsersEntity userReg, UsersEntity userOld){
         this.namePool = dto.getNamePool();
         this.ipAddresStart = dto.getIpAddresStart();
         this.ipAddresEnd = dto.getIpAddresEnd();
         this.idUserReg = userReg;
-        this.dateReg = dateReg;
         this.idUserOld = userOld;
-        this.dateOld = dateOld;
-        this.isStatus = refStatusEntity;
     }
 
     public String getFIOReg(){
@@ -84,11 +73,9 @@ public class PoolAddressEntity {
                 ", namePool='" + namePool + '\'' +
                 ", ipAddresStart='" + ipAddresStart + '\'' +
                 ", ipAddresEnd='" + ipAddresEnd + '\'' +
-                ", dateReg=" + dateReg +
-                ", dateOld=" + dateOld +
                 ", idUserOld=" + idUserOld +
                 ", idUserReg=" + idUserReg +
-                ", isStatus=" + isStatus +
+                ", isStatus=" +
                 '}';
     }
 }

@@ -20,8 +20,8 @@ public class NodesController  {
         return nodesService.findAll();
     }
 
-    @RequestMapping(value = "/SearchNodes/{id_nodes}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public NodesDto read(@PathVariable("id_nodes") NodesDto obj) {
+    @RequestMapping(value = "/{id_nodes}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public NodesDto read(@PathVariable("id_nodes") int obj) {
         return nodesService.read(obj);
     }
 

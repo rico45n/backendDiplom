@@ -1,10 +1,11 @@
 package ru.pesnin.system.accounting.services.entity.network;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 import ru.pesnin.system.accounting.integration.dto.network.NetworkDto;
-import ru.pesnin.system.accounting.services.entity.RefStatusEntity;
 import ru.pesnin.system.accounting.services.entity.user.UsersEntity;
 
 import java.util.Date;
@@ -13,6 +14,8 @@ import java.util.Date;
 @Data
 @Table(schema = "network", name = "Network")
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class NetworkEntity {
 
     @Id
@@ -45,21 +48,13 @@ public class NetworkEntity {
 
     @Column(name = "network_mask")
     private String networkMask;
-    @Column(name = "default_geteway")
-    private String defaultGetAway;
-    @Column(name = "date_reg")
-    private Date dateReg;
-    @Column(name = "date_old")
-    private Date dateOld;
 
-    @ManyToOne
-    @JoinColumn(name = "is_status",referencedColumnName ="id_status" )
-    private RefStatusEntity isStatus;
+
 
 
 
     public void setNewNetworkEntity(NetworkDto networkDto, PoolAddressEntity poolAddressEntity, UsersEntity userReg, UsersEntity userOld,
-                                    VlanEntity vlanEntity, DhcpPoolEntity dhcpPoolEntity, RefStatusEntity refStatusDomain){
+                                    VlanEntity vlanEntity, DhcpPoolEntity dhcpPoolEntity){
         this.idPoolAddress = poolAddressEntity;
         this.idUserReg = userReg;
         this.idUserOld = userOld;
@@ -73,10 +68,7 @@ public class NetworkEntity {
             this.ipAddressNetwork = networkDto.getIpAddressNetwork();
             this.networkMask = networkDto.getNetworkMask();
         }
-        this.defaultGetAway = networkDto.getDefaultGeteway();
-        this.dateReg = new Date();
-        this.dateOld = null;
-        this.isStatus = refStatusDomain;
+
     }
 
 

@@ -7,6 +7,7 @@ import ru.pesnin.system.accounting.services.entity.network.CrossesEntity;
 import ru.pesnin.system.accounting.services.service.interfase.pac.network.ICrossesService;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin("*")
@@ -15,13 +16,13 @@ public class CrossesController  {
     @Autowired
     private ICrossesService crossesService;
 
-    @RequestMapping(value = "/CrossesAll", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<CrossesEntity> findAll() {
         return crossesService.findAll();
     }
 
-    @RequestMapping(value = "/SearchCrosses/{id_crosses}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public CrossesEntity read(@PathVariable("id_crosses") CrossesEntity obj) {
+    @RequestMapping(value = "{idCrosses}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public Optional<CrossesEntity> read(@PathVariable("idCrosses") CrossesEntity obj) {
 
         return crossesService.read(obj);
     }

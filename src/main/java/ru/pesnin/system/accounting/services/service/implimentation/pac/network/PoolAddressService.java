@@ -6,8 +6,9 @@ import ru.pesnin.system.accounting.integration.dto.network.PoolAddressDto;
 import ru.pesnin.system.accounting.services.entity.journal.NetworkJournalEntity;
 import ru.pesnin.system.accounting.services.entity.network.DhcpPoolEntity;
 import ru.pesnin.system.accounting.services.entity.network.NetworkEntity;
+import ru.pesnin.system.accounting.services.entity.network.NodesEntity;
 import ru.pesnin.system.accounting.services.entity.network.PoolAddressEntity;
-import ru.pesnin.system.accounting.services.repository.RefStatusRepository;
+import ru.pesnin.system.accounting.services.entity.user.UsersEntity;
 import ru.pesnin.system.accounting.services.repository.journal.NetworkJournalRepository;
 import ru.pesnin.system.accounting.services.repository.network.DhcpPoolRepository;
 import ru.pesnin.system.accounting.services.repository.network.NetworkRepository;
@@ -19,6 +20,7 @@ import ru.pesnin.system.accounting.services.service.interfase.pac.network.IPoolA
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PoolAddressService implements IPoolAddressService {
@@ -27,15 +29,7 @@ public class PoolAddressService implements IPoolAddressService {
     private PoolAddressRepository poolAddressRepository;
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private RefStatusRepository refStatusRepository;
 
-    @Autowired
-    private NetworkRepository networkRepository;
-    @Autowired
-    private NetworkJournalRepository networkJournalRepository;
-    @Autowired
-    private DhcpPoolRepository dhcpPoolRepository;
 
     @Override
     public List<PoolAddressDto> findAll() {
@@ -48,88 +42,42 @@ public class PoolAddressService implements IPoolAddressService {
     }
 
     @Override
-    public PoolAddressDto read(PoolAddressDto obj) {
-        return obj;
+    public PoolAddressDto read(int obj) {
+        var e = poolAddressRepository.findById(obj).get();
+        System.out.println(e);
+        return PoolAddressDto.builder()
+                .idPoolAddress(e.getIdPoolAddress())
+                .namePool(e.getNamePool())
+                .ipAddresStart(e.getIpAddresStart())
+                .ipAddresEnd(e.getIpAddresEnd())
+                .userOld(e.getFIOOld())
+                .idUserOld(e.getIdUserOld().getUserId())
+                .userReg(e.getFIOReg())
+                .idUserReg(e.getIdUserReg().getUserId())
+                .build();
     }
 
     @Override
-    public List<PoolAddressDto> delete(Integer idPool, PoolAddressDto poolAddressDto) {
-        try {
-            poolAddressRepository.findById(idPool).map(poolAddressEntity -> {
-                poolAddressEntity.setDateOld(new Date());
-                poolAddressEntity.setIdUserOld(userRepository.findById(poolAddressDto.getIdUserOld()).get());
-                poolAddressEntity.setIsStatus(refStatusRepository.findById(2).get());
-                return poolAddressRepository.save(poolAddressEntity);
-            });
-
-            try {
-                List<NetworkEntity> networkEntities = networkRepository.findByAndIdPoolAddress(idPool);
-                for (NetworkEntity networkEntity : networkEntities) {
-                    networkEntity.setIsStatus(refStatusRepository.findById(2).get());
-                    networkEntity.setIdUserOld(userRepository.findById(poolAddressDto.getIdUserOld()).get());
-                    networkEntity.setDateOld(new Date());
-                    networkRepository.save(networkEntity);
-                }
-
-            } catch (Exception e) {
-                System.out.println("Ошибка удаления сети: " + e.getMessage());
-            }
-            try {
-
-                List<NetworkEntity> networkEntities = networkRepository.findByAndIdPoolAddress(idPool);
-
-                for (NetworkEntity networkEntity : networkEntities) {
-                    List<NetworkJournalEntity> networkJournalEntities = networkJournalRepository.CascadeDelNet(networkEntity.getIdNetwork());
-                    for (NetworkJournalEntity networkJournalEntity : networkJournalEntities) {
-                        networkJournalEntity.setDateOld(new Date());
-                        networkJournalEntity.setIsStatus(refStatusRepository.findById(2).get());
-                        networkJournalEntity.setIdUserOld(userRepository.findById(poolAddressDto.getIdUserOld()).get());
-                        networkJournalRepository.save(networkJournalEntity);
-                    }
-                }
-
-            } catch (Exception e) {
-                System.out.println("Ошибка удаления записи из Журнала ip-адресного пространства:" + e.getMessage());
-            }
-
-            try {
-                List<NetworkEntity> networkDomains = networkRepository.findByAndIdPoolAddress(idPool);
-                for (NetworkEntity networkDomain : networkDomains) {
-                    DhcpPoolEntity dhcpPoolEntity = dhcpPoolRepository.findById(networkDomain.getIdDhcpPool().getIdDhcpPool()).get();
-                    dhcpPoolEntity.setIsStatus(refStatusRepository.findById(2).get());
-                    dhcpPoolRepository.save(dhcpPoolEntity);
-                }
-            } catch (Exception e) {
-                System.out.println("Ошибка удаления DHCP пула:" + e.getMessage());
-            }
-            return mapperEntityToDto();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return mapperEntityToDto();
-        }
+    public List<PoolAddressDto> delete(Integer idPool) {
+        poolAddressRepository.deleteById(idPool);
+        return this.findAll();
     }
 
     @Override
     public List<PoolAddressDto> update(Integer idPool, PoolAddressDto newPoolAdderDto) {
         try {
-
+            Optional<UsersEntity> usersEntityReg = userRepository.findById(newPoolAdderDto.getIdUserReg());
+            Optional<UsersEntity> usersEntityOld = userRepository.findById(newPoolAdderDto.getIdUserOld());
             poolAddressRepository.findById(idPool).map(poolAddressEntity -> {
-                poolAddressEntity.setDateOld(new Date());
+                poolAddressEntity.setNamePool(newPoolAdderDto.getNamePool());
+                poolAddressEntity.setIpAddresStart(newPoolAdderDto.getIpAddresStart());
+                poolAddressEntity.setIpAddresEnd(newPoolAdderDto.getIpAddresEnd());
+                poolAddressEntity.setIdUserOld(usersEntityOld.get());
+                poolAddressEntity.setIdUserReg(usersEntityReg.get());
                 poolAddressEntity.setIdUserOld(userRepository.findById(newPoolAdderDto.getIdUserOld()).get());
-                poolAddressEntity.setIsStatus(refStatusRepository.findById(2).get());
                 return poolAddressRepository.save(poolAddressEntity);
             });
 
-            PoolAddressEntity poolAddressEntity = new PoolAddressEntity();
-            poolAddressEntity.setNewPool(
-                    newPoolAdderDto,
-                    userRepository.findById(newPoolAdderDto.getIdUserOld()).get(),
-                    userRepository.findById(0).get(),
-                    refStatusRepository.findById(1).get(),
-                    new Date(),
-                    null
-            );
-            poolAddressRepository.save(poolAddressEntity);
             return mapperEntityToDto();
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -140,17 +88,16 @@ public class PoolAddressService implements IPoolAddressService {
     @Override
     public List<PoolAddressDto> create(PoolAddressDto obj) {
         try {
-
-            PoolAddressEntity poolAddressEntity = new PoolAddressEntity();
-            poolAddressEntity.setNewPool(
-                    obj,
-                    userRepository.findById(obj.getIdUserReg()).get(),
-                    userRepository.findById(0).get(),
-                    refStatusRepository.findById(1).get(),
-                    new Date(),
-                    null
-            );
-            poolAddressRepository.save(poolAddressEntity);
+            Optional<UsersEntity> usersEntityReg = userRepository.findById(obj.getIdUserReg());
+            Optional<UsersEntity> usersEntityOld = userRepository.findById(obj.getIdUserOld());
+            poolAddressRepository.save(PoolAddressEntity.builder()
+                    .idPoolAddress(obj.getIdPoolAddress())
+                    .namePool(obj.getNamePool())
+                    .ipAddresStart(obj.getIpAddresStart())
+                    .ipAddresEnd(obj.getIpAddresEnd())
+                    .idUserOld(usersEntityOld.get())
+                    .idUserReg(usersEntityReg.get())
+                    .build());
             return mapperEntityToDto();
         } catch (Exception e) {
             System.out.println(e.getMessage());

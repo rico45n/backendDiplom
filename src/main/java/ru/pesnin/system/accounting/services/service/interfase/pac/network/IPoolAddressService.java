@@ -9,8 +9,8 @@ import java.util.List;
 public interface IPoolAddressService {
 
     List<PoolAddressDto> findAll();
-    PoolAddressDto read(PoolAddressDto obj);
-    List<PoolAddressDto> delete(Integer idPool, PoolAddressDto obj);
+    PoolAddressDto read(int obj);
+    List<PoolAddressDto> delete(Integer idPool);
     List<PoolAddressDto> update(Integer idPool, PoolAddressDto newObj);
     List<PoolAddressDto> create(PoolAddressDto obj);
 }

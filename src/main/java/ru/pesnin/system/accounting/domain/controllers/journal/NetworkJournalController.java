@@ -21,14 +21,14 @@ public class NetworkJournalController  {
         return networkJournalService.findAll();
     }
 
-    @RequestMapping(value = "/SearchNetworkJournal/{id_network_journal}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public NetworkJournalDto read(@PathVariable("id_network_journal") NetworkJournalDto obj) {
+    @RequestMapping(value = "/{id_network_journal}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public NetworkJournalDto read(@PathVariable("id_network_journal")int obj) {
         return networkJournalService.read(obj);
     }
 
-    @RequestMapping(value = "/DeleteNetworkJournal/{id_network_journal}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public List<NetworkJournalDto> delete(@PathVariable("id_network_journal") Integer id_network_journal, @RequestBody NetworkJournalDto new_obj) {
-        return networkJournalService.delete(id_network_journal, new_obj);
+    @RequestMapping(value = "/DeleteNetworkJournal/{id_network_journal}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public List<NetworkJournalDto> delete(@PathVariable("id_network_journal") Integer id_network_journal) {
+        return networkJournalService.delete(id_network_journal);
     }
 
     @RequestMapping(value = "/UpdateNetworkJournal/{id_network_journal}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface ITypeDeviceService {
     List<TypeDeviceEntity> findAll();
-    TypeDeviceEntity read(TypeDeviceEntity obj);
+    TypeDeviceEntity read(int obj);
     List<TypeDeviceEntity> delete(Integer obj);
     List<TypeDeviceEntity> update(TypeDeviceEntity obj, Integer id);
     List<TypeDeviceEntity> create(TypeDeviceEntity obj);

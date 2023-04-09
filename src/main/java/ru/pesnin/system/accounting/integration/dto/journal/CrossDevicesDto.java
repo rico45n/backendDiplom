@@ -12,51 +12,51 @@ import ru.pesnin.system.accounting.services.entity.journal.CrossDevicesEntity;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CrossDevicesDto {
-    @JsonProperty("Id_crossdevices")
+
     private Integer idCrossDevices;
-    @JsonProperty("id_devices_first")
+
     private Integer idDevicesFirst;
-    @JsonProperty("host_name_start")
+
     private String hostNameStart;
-    @JsonProperty("inventar_number")
+
     private String inventarNumber;
-    @JsonProperty("user_otv_dev")
+
     private String userOtvDev;
-    @JsonProperty("id_devices_end")
+
     private Integer idDevicesEnd;
-    @JsonProperty("host_name_end")
+
     private String hostNameEnd;
-    @JsonProperty("id_user_otv")
+
     private Integer idUserOtv;
-    @JsonProperty("user_otv")
+
     private String userOtv;
-    @JsonProperty("id_user_old")
+
     private Integer idUserOld;
-    @JsonProperty("user_old")
+
     private String userOld;
-    @JsonProperty("id_network_journal")
+
     private Integer idNetworkJournal;
-    @JsonProperty("ip_address_network")
+
     private String ipAddressNetwork;
 
     private String description;
-    @JsonProperty("date_reg")
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy")
     private String dateReg;
-    @JsonProperty("date_old")
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy")
     private String dateOld;
-    @JsonProperty("id_vlan")
+
     private Integer idVlan;
-    @JsonProperty("name_vlan")
+
     private String nameVlan;
-    @JsonProperty("id_crosses")
+
     private Integer idCrosses;
-    @JsonProperty("info_crosses")
+
     private String infoCrosses;
-    @JsonProperty("id_status")
+
     private Integer idStatus;
-    @JsonProperty("name_status")
+
     private String nameStatus;
 
     public CrossDevicesDto(CrossDevicesEntity obj) {
@@ -79,9 +79,9 @@ public class CrossDevicesDto {
         catch (Exception e){
             this.description = "";
         }
-        this.dateReg = obj.getDateReg().toString();
+
         try {
-            this.dateOld = obj.getDateOld().toString();
+
         }catch (Exception e){
             this.dateOld = "";
         }
@@ -89,8 +89,6 @@ public class CrossDevicesDto {
         this.nameVlan = "["+obj.getIdVlan().getVlanNumber()+"] "+obj.getIdVlan().getVlanName();
         this.idCrosses = obj.getIdCrosses().getIdCrossesFirst();
         this.infoCrosses = obj.getIdCrosses().getInfoCrosses();
-        this.idStatus = obj.getIsStatus().getIdStatus();
-        this.nameStatus = obj.getIsStatus().getNameStatus();
     }
 
     @Override

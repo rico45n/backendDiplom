@@ -31,6 +31,8 @@ public class CrossesEntity {
         return "Порт: "+this.port+" Слот: "+this.slot+" Шкаф:"+this.shkaf;
     }
 
+
+
     @Override
     public String toString() {
         return "CrossesEntity{" +

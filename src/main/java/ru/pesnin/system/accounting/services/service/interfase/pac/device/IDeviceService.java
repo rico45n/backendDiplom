@@ -9,10 +9,10 @@ import java.util.List;
 
 public interface IDeviceService {
     List<DevicesDto> findAll();
-    DevicesDto read(DevicesDto obj);
+    DevicesDto read(int obj);
     InfoCrossDeviceEndDto searchCrossDeviceInfo(Integer idDevices);
     List<InfoCrossDeviceEndDto> getAllCrossDevicesInfo();
-    List<DevicesDto> delete(Integer idDevices, Integer idUserOld);
+    List<DevicesDto> delete(Integer idDevices);
     List<DevicesDto> update(DevicesDto obj, Integer idDevices);
     List<DevicesDto> create(DevicesDto obj);
     List<NetworkJournalDeviceFilter> getAllDeviceFilter();

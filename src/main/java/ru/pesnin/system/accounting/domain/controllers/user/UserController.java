@@ -1,6 +1,8 @@
 package ru.pesnin.system.accounting.domain.controllers.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.web.bind.annotation.*;
 import ru.pesnin.system.accounting.services.entity.user.UsersEntity;
 import ru.pesnin.system.accounting.services.service.interfase.pac.user.IUserService;
@@ -11,7 +13,7 @@ import java.util.Optional;
 @RestController
 @CrossOrigin("*")
 @RequestMapping(value = "/User")
-public class UserController  {
+public class UserController {
     @Autowired
     private IUserService userservice;
 
@@ -20,7 +22,7 @@ public class UserController  {
         return userservice.findAll();
     }
 
-    @RequestMapping(value = "{userId}" ,method = RequestMethod.GET)
+    @RequestMapping(value = "{userId}", method = RequestMethod.GET)
     public Optional<UsersEntity> read(@PathVariable(value = "userId") UsersEntity obj) {
         return userservice.read(obj);
     }
@@ -29,9 +31,8 @@ public class UserController  {
     public List<UsersEntity> delete(@PathVariable("userId") Integer obj) {
         try {
             return userservice.delete(obj);
-        }
-        catch (Exception e){
-            return  userservice.findAll();
+        } catch (Exception e) {
+            return userservice.findAll();
         }
     }
 
@@ -40,19 +41,19 @@ public class UserController  {
                                     @PathVariable("userId") Integer user_id) {
         return userservice.update(obj, user_id);
     }
+
     @RequestMapping(value = "/AddUser", method = RequestMethod.POST)
-    public List<UsersEntity> create (@RequestBody UsersEntity obj){
+    public List<UsersEntity> create(@RequestBody UsersEntity obj) {
         try {
             return userservice.create(obj);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             return userservice.findAll();
         }
     }
 
     @RequestMapping(value = "/loginUser", method = RequestMethod.GET)
-    public UsersEntity loginUserSearch (@RequestParam(value = "userLogin") String login, @RequestParam (value = "userPassword") String password){
-        return userservice.loginUserSearch(login, password);
+    public UsersEntity loginUserSearch(@RequestParam(value = "userLogin") String login, @RequestParam(value = "userPassword") String password) {
+            return userservice.loginUserSearch(login, password);
     }
 }

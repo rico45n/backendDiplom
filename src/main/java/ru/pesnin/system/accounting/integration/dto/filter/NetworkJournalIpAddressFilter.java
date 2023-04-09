@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 public class NetworkJournalIpAddressFilter {
 
     private Integer id;
-    @JsonProperty("ip_address")
     private String ipAddress;
 
     public void setNetworkJournalIpAddressFilter(Integer id, String ipAddress) {

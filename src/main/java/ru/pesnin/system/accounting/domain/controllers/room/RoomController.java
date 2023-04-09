@@ -20,7 +20,7 @@ public class RoomController  {
         return roomService.findAll();
     }
 
-    @RequestMapping(value = "/SearchRoom/{id_room}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/{id_room}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public RoomDto read(@PathVariable("id_room") Integer obj) {
         return roomService.read(obj);
     }

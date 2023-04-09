@@ -24,14 +24,25 @@ public class NodesService implements INodesService {
     }
 
     @Override
-    public NodesDto read(NodesDto obj) {
-        return null;
+    public NodesDto read(int obj) {
+        var e = nodesRepository.findById(obj).get();
+        return NodesDto.builder()
+                .idNodes(e.getIdNodes())
+                .nameNodes(e.getNameNodes())
+                .idUserOtv(e.getUserOtv().getUserId())
+                .userOtv(e.getUserOtv().getFioUser())
+                .build();
     }
 
     @Override
-    public List<NodesDto> delete(Integer id_nodes) {
-        nodesRepository.deleteNodes(id_nodes);
-        return mapperEntityToDto();
+    public List<NodesDto> delete(Integer idNodes) {
+        try {
+            nodesRepository.deleteNodes(idNodes);
+            return findAll();
+        }catch (Exception e){
+            return findAll();
+        }
+
     }
 
     @Override
@@ -63,8 +74,7 @@ public class NodesService implements INodesService {
     {
         List<NodesDto> listDto = new ArrayList<>();
         List<NodesEntity> listEntity = nodesRepository.findAll();
-        for(int i = 0; i<listEntity.size(); i++) {
-            NodesEntity objEnt= listEntity.get(i);
+        for (NodesEntity objEnt : listEntity) {
             listDto.add(new NodesDto(objEnt));
         }
         return listDto;

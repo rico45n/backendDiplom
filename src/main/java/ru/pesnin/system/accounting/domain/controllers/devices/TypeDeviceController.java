@@ -20,14 +20,13 @@ public class TypeDeviceController {
         return typeDeviceService.findAll();
     }
 
-    @RequestMapping(value = "/SearchTypeDevices/{id_type_dev}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public TypeDeviceEntity read(@PathVariable("id_type_dev") TypeDeviceEntity obj) {
+    @RequestMapping(value = "/{id_type_dev}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public TypeDeviceEntity read(@PathVariable("id_type_dev") int obj) {
         return typeDeviceService.read(obj);
     }
 
     @RequestMapping(value = "/DeleteTypeDevices/{id_type_dev}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public List<TypeDeviceEntity> delete(@PathVariable("id_type_dev") Integer obj) {
-
         return typeDeviceService.delete(obj);
     }
 

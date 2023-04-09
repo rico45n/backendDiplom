@@ -3,12 +3,14 @@ package ru.pesnin.system.accounting.integration.dto.network;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.pesnin.system.accounting.services.entity.network.NodesEntity;
 
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Data
 public class NodesDto {
 

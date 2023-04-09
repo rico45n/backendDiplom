@@ -3,7 +3,6 @@ package ru.pesnin.system.accounting.services.entity.network;
 import lombok.Data;
 import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
-import ru.pesnin.system.accounting.services.entity.RefStatusEntity;
 
 
 @Entity
@@ -23,9 +22,7 @@ public class DhcpPoolEntity {
     @Column(name = "address_end")
     private String addressEnd;
 
-    @ManyToOne
-    @JoinColumn(name = "is_status",referencedColumnName ="id_status" )
-    private RefStatusEntity isStatus;
+
 
 
     public String getPoolIP(){
@@ -38,7 +35,7 @@ public class DhcpPoolEntity {
                 "idDhcpPool=" + idDhcpPool +
                 ", addressStart='" + addressStart + '\'' +
                 ", addressEnd='" + addressEnd + '\'' +
-                ", isStatus=" + isStatus +
+                ", isStatus=" +
                 '}';
     }
 }

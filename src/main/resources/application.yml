@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    url: "jdbc:postgresql://localhost/diplom"
+    username: "rico45"
+    password: "0201"
+    driver-class-name: "org.postgresql.Driver"
+  jpa:
+    hibernate:
+      ddl-auto: update
+    generate-ddl: true
+
+

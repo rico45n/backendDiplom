@@ -9,8 +9,8 @@ import java.util.List;
 
 public interface INetworkService {
     List<NetworkDto> findAll();
-    NetworkDto read(NetworkDto obj);
-    List<NetworkDto> delete(Integer idNetwork, NetworkDto obj);
+    NetworkDto read(int obj);
+    List<NetworkDto> delete(Integer idNetwork);
     List<NetworkDto> update(Integer idNetwork, NetworkDto obj);
     List<NetworkDto> create(NetworkDto obj);
     Integer createNetworkDhcp(MapperStringToEntity obj);

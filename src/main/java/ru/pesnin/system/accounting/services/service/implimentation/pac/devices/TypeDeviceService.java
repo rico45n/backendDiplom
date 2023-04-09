@@ -21,12 +21,14 @@ public class TypeDeviceService implements ITypeDeviceService {
     }
 
     @Override
-    public TypeDeviceEntity read(TypeDeviceEntity obj) {
-        return null;
+    public TypeDeviceEntity read(int id) {
+        return typeDeviceRepository.findById(id).get();
     }
 
     @Override
     public List<TypeDeviceEntity> delete(Integer id) {
+
+        typeDeviceRepository.deleteById(id);
         return typeDeviceRepository.findAll();
     }
 

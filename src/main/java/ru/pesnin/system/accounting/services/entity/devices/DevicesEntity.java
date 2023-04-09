@@ -3,7 +3,6 @@ package ru.pesnin.system.accounting.services.entity.devices;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.pesnin.system.accounting.services.entity.RefStatusEntity;
 import ru.pesnin.system.accounting.services.entity.room.RoomEntity;
 import ru.pesnin.system.accounting.services.entity.user.UsersEntity;
 
@@ -44,17 +43,12 @@ public class DevicesEntity {
     @JoinColumn(name = "id_props_port",referencedColumnName ="id_props_port" )
     private PropsPortEntity idPropsPort;
 
-    @ManyToOne
-    @JoinColumn(name = "is_status",referencedColumnName ="id_status" )
-    private RefStatusEntity isStatus;
-
 
 
     public DevicesEntity(TypeDeviceEntity idTypeDevices,
                          UsersEntity userOtv, String hostname,
                          String macAddress, String inventarNumber,
-                         RoomEntity idRoom, PropsPortEntity idPropsPort,
-                         RefStatusEntity isStatus) {
+                         RoomEntity idRoom, PropsPortEntity idPropsPort) {
 
         this.idTypeDevices = idTypeDevices;
         this.userOtv = userOtv;
@@ -63,7 +57,6 @@ public class DevicesEntity {
         this.inventarNumber = inventarNumber;
         this.idRoom = idRoom;
         this.idPropsPort = idPropsPort;
-        this.isStatus = isStatus;
     }
 
     @Override
@@ -76,7 +69,7 @@ public class DevicesEntity {
                 ", inventarNumber='" + inventarNumber + '\'' +
                 ", idRoom=" + idRoom +
                 ", idPropsPort=" + idPropsPort +
-                ", isStatus=" + isStatus +
+                ", isStatus=" +
                 '}';
     }
 }

@@ -7,6 +7,7 @@ import ru.pesnin.system.accounting.services.repository.network.CrossesRepository
 import ru.pesnin.system.accounting.services.service.interfase.pac.network.ICrossesService;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CrossesService implements ICrossesService {
@@ -25,8 +26,8 @@ public class CrossesService implements ICrossesService {
     }
 
     @Override
-    public CrossesEntity read(CrossesEntity crosses) {
-       return null;
+    public Optional<CrossesEntity> read(CrossesEntity crosses) {
+        return crossesRepository.findById(crosses.getIdCrosses());
     }
 
     @Override

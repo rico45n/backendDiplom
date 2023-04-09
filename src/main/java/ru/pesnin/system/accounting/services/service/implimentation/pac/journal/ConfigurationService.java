@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.pesnin.system.accounting.integration.dto.journal.ConfigurationDto;
 import ru.pesnin.system.accounting.services.entity.journal.ConfigurationEntity;
-import ru.pesnin.system.accounting.services.repository.RefStatusRepository;
 import ru.pesnin.system.accounting.services.repository.devices.DevicesRepository;
 import ru.pesnin.system.accounting.services.repository.journal.ConfigurationRepository;
 import ru.pesnin.system.accounting.services.repository.user.UserRepository;
@@ -21,8 +20,7 @@ public class ConfigurationService implements IConfigurationService {
    private ConfigurationRepository configurationRepository;
    @Autowired
    private UserRepository userRepository;
-   @Autowired
-   private RefStatusRepository refStatusRepository;
+
    @Autowired
    private DevicesRepository devicesRepository;
 
@@ -41,8 +39,6 @@ public class ConfigurationService implements IConfigurationService {
     public List<ConfigurationDto> delete(Integer id_config, Integer user_id) {
         configurationRepository.findById(id_config).map(deleteConfig->{
             deleteConfig.setIdUserOld(userRepository.findById(user_id).get());
-            deleteConfig.setDateOld(new Date());
-            deleteConfig.setIsStatus(refStatusRepository.findById(2).get());
             return configurationRepository.save(deleteConfig);
         });
         return mapperEntityToDto();
@@ -59,10 +55,7 @@ public class ConfigurationService implements IConfigurationService {
                                 newObj.getConfigLast(),
                                 newObj.getDeference(),
                                 userRepository.findById(newObj.getIdUserReg()).get(),
-                                userRepository.findById(newObj.getIdUserOld()).get(),
-                                new Date(),
-                                new Date(),
-                                refStatusRepository.findById(2).get()
+                                userRepository.findById(newObj.getIdUserOld()).get()
                         );
                 return configurationRepository.save(configurationEntity);
            });
@@ -73,10 +66,7 @@ public class ConfigurationService implements IConfigurationService {
                    null,
                     null,
                     userRepository.findById(newObj.getIdUserReg()).get(),
-                    userRepository.findById(0).get(),
-                    new Date(),
-                    null,
-                    refStatusRepository.findById(1).get());
+                    userRepository.findById(0).get());
                 configurationRepository.save(configDom);
             return mapperEntityToDto();
     }
@@ -87,13 +77,10 @@ public class ConfigurationService implements IConfigurationService {
         configurationEntity.setConfiguration(
                 devicesRepository.findById(obj.getIdDevice()).get(),
                 obj.getConfigFirst(),
-                null,
-                null,
+                obj.getConfigLast(),
+                obj.getDeference(),
                 userRepository.findById(obj.getIdUserReg()).get(),
-                userRepository.findById(0).get(),
-                new Date(),
-                null,
-                refStatusRepository.findById(1).get());
+                userRepository.findById(0).get());
         configurationRepository.save(configurationEntity);
         return mapperEntityToDto();
     }

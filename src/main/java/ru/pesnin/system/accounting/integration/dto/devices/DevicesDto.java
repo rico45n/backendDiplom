@@ -2,41 +2,47 @@ package ru.pesnin.system.accounting.integration.dto.devices;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import ru.pesnin.system.accounting.services.entity.devices.DevicesEntity;
 
 
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class DevicesDto {
-    @JsonProperty("id_devices")
+
     private Integer idDevices;
-    @JsonProperty("id_type_devices")
+
     private Integer idTypeDevices;
-    @JsonProperty("type_device")
+
     private String typeDevice;
-    @JsonProperty("id_user_otv")
+
     private Integer idUserOtv;
-    @JsonProperty("user_otv")
+
     private String userOtv;
-    @JsonProperty("hostname")
+
     private String hostName;
-    @JsonProperty("mac_address")
+
     private String macAddress;
-    @JsonProperty("inventar_number")
+
     private String inventarNumber;
-    @JsonProperty("id_room")
+
     private Integer idRoom;
 
     private String  room;
-    @JsonProperty("id_props_port")
+
     private Integer idPropsPort;
-    @JsonProperty("count_opt_port")
+
     private Integer countOptPort;
-    @JsonProperty("count_ethernet_port")
+
     private Integer countEthernetPort;
-    @JsonProperty("id_status")
+
     private Integer idStatus;
-    @JsonProperty("name_status")
+
     private String nameStatus;
     public DevicesDto(DevicesEntity dev) {
         this.idDevices = dev.getIdDevices();
@@ -52,8 +58,6 @@ public class DevicesDto {
         this.countEthernetPort = dev.getIdPropsPort().getEthernetPort();
         this.macAddress = dev.getMacAddress();
         this.inventarNumber = dev.getInventarNumber();
-        this.idStatus = dev.getIsStatus().getIdStatus();
-        this.nameStatus = dev.getIsStatus().getNameStatus();
     }
 
     @Override

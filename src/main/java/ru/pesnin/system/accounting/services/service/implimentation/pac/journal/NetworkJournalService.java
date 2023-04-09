@@ -6,7 +6,6 @@ import ru.pesnin.system.accounting.integration.dto.filter.NetworkJournalIpAddres
 import ru.pesnin.system.accounting.integration.dto.journal.NetworkJournalDto;
 import ru.pesnin.system.accounting.services.entity.journal.NetworkJournalEntity;
 import ru.pesnin.system.accounting.services.entity.network.NetworkEntity;
-import ru.pesnin.system.accounting.services.repository.RefStatusRepository;
 import ru.pesnin.system.accounting.services.repository.devices.DevicesRepository;
 import ru.pesnin.system.accounting.services.repository.journal.NetworkJournalRepository;
 
@@ -27,8 +26,6 @@ public class NetworkJournalService implements INetworkJournalService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private RefStatusRepository refStatusRepository;
-    @Autowired
     private NetworkRepository networkRepository;
     @Autowired
     private DevicesRepository devicesRepository;
@@ -43,68 +40,62 @@ public class NetworkJournalService implements INetworkJournalService {
     }
 
     @Override
-    public NetworkJournalDto read(NetworkJournalDto obj) {
-        return null;
+    public NetworkJournalDto read(Integer obj) {
+        var e = networkJournalRepository.findById(obj).get();
+        return NetworkJournalDto.builder()
+                .idNetwork(e.getIdNetwork().getIdNetwork())
+                .dnsZone(e.getDnsZone())
+                .idNetworkJournal(e.getIdNetworkJournal())
+                .hostName(e.getIdDevices().getHostname())
+                .network(e.getIdNetwork().getNetworkInfo())
+                .userReg(e.getIdUserReg().getFioUser())
+                .userOld(e.getIdUserOld().getFioUser())
+                .idDevices(e.getIdDevices().getIdDevices())
+                .ipAddress(e.getIpAddress())
+                .idUserOld(e.getIdUserOld().getUserId())
+                .idUserReg(e.getIdUserReg().getUserId())
+                .build();
     }
 
     @Override
-    public List<NetworkJournalDto> delete(Integer idNetworkJournal, NetworkJournalDto newObj) {
-        try {
-            networkJournalRepository.findById(idNetworkJournal).map(networkJournalDomain -> {
-                networkJournalDomain.setDateOld(new Date());
-                networkJournalDomain.setIdUserOld(userRepository.findById(newObj.getIdUserReg()).get());
-                networkJournalDomain.setIsStatus(refStatusRepository.findById(2).get());
-                return networkJournalRepository.save(networkJournalDomain);
-            });
-            return mapperEntityToDto();
-        }catch (Exception e){
-            return mapperEntityToDto();
-        }
+    public List<NetworkJournalDto> delete(Integer idNetworkJournal) {
+        networkJournalRepository.deleteById(idNetworkJournal);
+        return this.findAll();
     }
 
     @Override
-    public List<NetworkJournalDto> update(Integer idNetworkJournal , NetworkJournalDto obj) {
-        try{
-            networkJournalRepository.findById(idNetworkJournal).map(networkJournalEntity -> {
-                networkJournalEntity.setDateOld(new Date());
-                networkJournalEntity.setIdUserOld(userRepository.findById(obj.getIdUserReg()).get());
-                networkJournalEntity.setIsStatus(refStatusRepository.findById(2).get());
-                return networkJournalRepository.save(networkJournalEntity);
-            });
-            NetworkJournalEntity networkJournalEntity = new NetworkJournalEntity();
-            networkJournalEntity.setNetworkJournalEntity(
-                    networkRepository.findById(obj.getIdNetwork()).get(),
-                    obj,
-                    userRepository.findById(obj.getIdUserReg()).get(),
-                    userRepository.findById(0).get(),
-                    devicesRepository.findById(obj.getIdDevices()).get(),
-                    refStatusRepository.findById(1).get());
-
-            networkJournalRepository.save(networkJournalEntity);
-            return mapperEntityToDto();
-        }catch (Exception e) {
-            return mapperEntityToDto();
-        }
+    public List<NetworkJournalDto> update(Integer idNetworkJournal, NetworkJournalDto obj) {
+        var net = networkRepository.findById(obj.getIdNetwork());
+        var dev = devicesRepository.findById(obj.getIdDevices());
+        var userReg = userRepository.findById(obj.getIdUserReg());
+        var userOld = userRepository.findById(obj.getIdUserOld());
+        networkJournalRepository.findById(idNetworkJournal).map(networkJournalEntity -> {
+            networkJournalEntity.setIdNetwork(net.get());
+            networkJournalEntity.setDnsZone(obj.getDnsZone());
+            networkJournalEntity.setIdDevices(dev.get());
+            networkJournalEntity.setIpAddress(obj.getIpAddress());
+            networkJournalEntity.setIdUserOld(userOld.get());
+            networkJournalEntity.setIdUserReg(userReg.get());
+            return networkJournalRepository.save(networkJournalEntity);
+        });
+        return this.findAll();
     }
 
     @Override
     public List<NetworkJournalDto> create(NetworkJournalDto obj) {
-        try{
-            NetworkJournalEntity networkJournalEntity = new NetworkJournalEntity();
-            networkJournalEntity.setNetworkJournalEntity(
-                    networkRepository.findById(obj.getIdNetwork()).get(),
-                    obj,
-                    userRepository.findById(obj.getIdUserReg()).get(),
-                    userRepository.findById(0).get(),
-                    devicesRepository.findById(obj.getIdDevices()).get(),
-                    refStatusRepository.findById(1).get());
-
-            networkJournalRepository.save(networkJournalEntity);
-            return mapperEntityToDto();
-        }catch (Exception e) {
-            System.out.println(e.getMessage());
-            return mapperEntityToDto();
-        }
+        var net = networkRepository.findById(obj.getIdNetwork());
+        var dev = devicesRepository.findById(obj.getIdDevices());
+        var userReg = userRepository.findById(obj.getIdUserReg());
+        var userOld = userRepository.findById(obj.getIdUserOld());
+        networkJournalRepository.save(NetworkJournalEntity.builder()
+                .idNetwork(net.get())
+                .DnsZone(obj.getDnsZone())
+                .idDevices(dev.get())
+                .ipAddress(obj.getIpAddress())
+                .idUserOld(userOld.get())
+                .idUserReg(userReg.get())
+                .build());
+        return mapperEntityToDto();
     }
 
     @Override
@@ -138,39 +129,38 @@ public class NetworkJournalService implements INetworkJournalService {
 
                 List<String> ipAddressFromDb = networkJournalRepository.findBy_ipAddress();
 
-                for (int i = 0; i < ipAddressFromDb.size(); i++){
-                    for (int j = 0; j < ListDHCPIPAddress.size(); j++){
-                        if(equals(ListDHCPIPAddress.get(j)) == equals(ipAddressFromDb.get(i))){
+                for (int i = 0; i < ipAddressFromDb.size(); i++) {
+                    for (int j = 0; j < ListDHCPIPAddress.size(); j++) {
+                        if (equals(ListDHCPIPAddress.get(j)) == equals(ipAddressFromDb.get(i))) {
                             ListDHCPIPAddress.remove(j);
                             break;
                         }
                     }
                 }
 
-            }catch (Exception e) {
+            } catch (Exception e) {
                 ListIpAddressNet = ipService.getAllIpAddress(netAddrIP, netAddrIPend);
             }
 
             List<NetworkJournalIpAddressFilter> networkJournalIpAddressFilters = new ArrayList<>();
-            for (int ip = 0; ip < ListIpAddressNet.size(); ip ++) {
+            for (int ip = 0; ip < ListIpAddressNet.size(); ip++) {
                 NetworkJournalIpAddressFilter netFilter = new NetworkJournalIpAddressFilter(ip, ListIpAddressNet.get(ip));
                 networkJournalIpAddressFilters.add(netFilter);
             }
 
             return networkJournalIpAddressFilters;
-        }catch (Exception e){
-            NetworkJournalIpAddressFilter networkJournalIpAddressFilter = new NetworkJournalIpAddressFilter(0,"");
+        } catch (Exception e) {
+            NetworkJournalIpAddressFilter networkJournalIpAddressFilter = new NetworkJournalIpAddressFilter(0, "");
             List<NetworkJournalIpAddressFilter> networkJournalIpAddressFilters = new ArrayList<>();
             networkJournalIpAddressFilters.add(networkJournalIpAddressFilter);
             return networkJournalIpAddressFilters;
         }
     }
 
-    private List<NetworkJournalDto> mapperEntityToDto()
-    {
+    private List<NetworkJournalDto> mapperEntityToDto() {
         List<NetworkJournalDto> listDto = new ArrayList<>();
         List<NetworkJournalEntity> listEntity = networkJournalRepository.findAll();
-        for(int i = 0; i<listEntity.size(); i++) {
+        for (int i = 0; i < listEntity.size(); i++) {
             NetworkJournalEntity obj_dom = listEntity.get(i);
             listDto.add(new NetworkJournalDto(obj_dom));
         }

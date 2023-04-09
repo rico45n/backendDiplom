@@ -21,14 +21,14 @@ public class NetworkController  {
         return networkService.findAll();
     }
 
-    @RequestMapping(value = "/SearchNetwork/{id_network}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public NetworkDto read(@PathVariable("id_network") NetworkDto obj) {
+    @RequestMapping(value = "/{id_network}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public NetworkDto read(@PathVariable("id_network") int obj) {
         return networkService.read(obj);
     }
 
-    @RequestMapping(value = "/DeleteNetwork/{id_network}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public List<NetworkDto> delete(@PathVariable("id_network") Integer id, @RequestBody NetworkDto obj) {
-        return networkService.delete( id, obj);
+    @RequestMapping(value = "/DeleteNetwork/{id_network}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public List<NetworkDto> delete(@PathVariable("id_network") Integer id) {
+        return networkService.delete( id);
     }
 
     @RequestMapping(value = "/UpdateNetwork/{id_network}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -42,7 +42,6 @@ public class NetworkController  {
 
     @RequestMapping(value = "/CreateNetworkDHCP", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Integer createNetworkDhcp(@RequestBody MapperStringToEntity obj){
-
         return networkService.createNetworkDhcp(obj);
     }
 

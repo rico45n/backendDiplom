@@ -20,14 +20,14 @@ public class  PoolController  {
         return pool_service.findAll();
     }
 
-    @RequestMapping(value = "/SearchPool/{id_pool_address}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public PoolAddressDto read(@PathVariable("id_pool_address") PoolAddressDto obj) {
+    @RequestMapping(value = "/{id_pool_address}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public PoolAddressDto read(@PathVariable("id_pool_address") int obj) {
         return pool_service.read(obj);
     }
 
-    @RequestMapping(value = "/DeletePool/{id_pool_address}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public List<PoolAddressDto> delete(@PathVariable("id_pool_address") Integer id_pool , @RequestBody PoolAddressDto obj) {
-        return pool_service.delete(id_pool ,obj);
+    @RequestMapping(value = "/DeletePool/{id_pool_address}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public List<PoolAddressDto> delete(@PathVariable("id_pool_address") Integer id_pool) {
+        return pool_service.delete(id_pool);
     }
 
     @RequestMapping(value = "/UpdatePool/{id_pool_address}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

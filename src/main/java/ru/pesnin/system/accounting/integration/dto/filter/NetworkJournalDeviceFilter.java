@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class NetworkJournalDeviceFilter {
-    @JsonProperty("id_devices")
+
     private Integer idDevices;
-    @JsonProperty("hostname")
+
     private String hostName;
 
     @Override

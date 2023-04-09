@@ -8,7 +8,6 @@ import ru.pesnin.system.accounting.integration.dto.room.RoomDto;
 import ru.pesnin.system.accounting.services.entity.network.NodesEntity;
 import ru.pesnin.system.accounting.services.entity.room.RoomEntity;
 import ru.pesnin.system.accounting.services.entity.user.UsersEntity;
-import ru.pesnin.system.accounting.services.repository.RefStatusRepository;
 import ru.pesnin.system.accounting.services.repository.devices.DevicesRepository;
 import ru.pesnin.system.accounting.services.repository.network.NodesRepository;
 import ru.pesnin.system.accounting.services.repository.room.RoomRepository;
@@ -30,8 +29,6 @@ public class RoomService implements IRoomService {
     private NodesRepository nodesRepository;
     @Autowired
     private DevicesRepository devicesRepository;
-    @Autowired
-    private RefStatusRepository refStatusRepository;
 
     @PersistenceContext
     private EntityManager entityManager;

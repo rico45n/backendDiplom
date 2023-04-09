@@ -1,5 +1,7 @@
 package ru.pesnin.system.accounting.services.entity.user;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 import jakarta.persistence.*;
@@ -10,6 +12,8 @@ import lombok.NoArgsConstructor;
 @Table(schema = "auth", name = "users")
 @Data
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class UsersEntity {
 
     @Id

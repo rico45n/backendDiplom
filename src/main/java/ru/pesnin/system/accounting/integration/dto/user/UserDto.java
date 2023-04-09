@@ -22,6 +22,7 @@ public class UserDto {
 
     private String userLogin;
 
+    private String fioUser;
     @Override
     public String toString() {
         return "UserDto{" +

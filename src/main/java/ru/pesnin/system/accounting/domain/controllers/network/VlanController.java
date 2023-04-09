@@ -20,14 +20,14 @@ public class VlanController {
         return vlanService.findAll();
     }
 
-    @RequestMapping(value = "/SearchVlan/{id_vlan}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public VlanEntity read(@PathVariable("id_vlan") VlanEntity obj) {
+    @RequestMapping(value = "/{id_vlan}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public VlanEntity read(@PathVariable("id_vlan") int obj) {
         return vlanService.read(obj);
     }
 
-    @RequestMapping(value = "/DeleteVlan/{id_vlan}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public List<VlanEntity>  delete(@PathVariable("id_vlan") Integer id_vlan, @RequestBody VlanEntity obj) {
-        return vlanService.delete(id_vlan, obj);
+    @RequestMapping(value = "/DeleteVlan/{id_vlan}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public List<VlanEntity>  delete(@PathVariable("id_vlan") Integer id_vlan) {
+        return vlanService.delete(id_vlan);
     }
 
     @RequestMapping(value = "/UpdateVlan/{id_vlan}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

@@ -20,8 +20,8 @@ public class DhcpController {
         return pool_service.findAll();
     }
 
-    @RequestMapping(value = "/SearchDHCP/{id_DHСP_pool}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public DhcpPoolEntity read(@PathVariable("id_DHСP_pool") DhcpPoolEntity obj) {
+    @RequestMapping(value = "/{id_DHСP_pool}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public DhcpPoolEntity read(@PathVariable("id_DHСP_pool") int obj) {
         return pool_service.read(obj);
     }
 

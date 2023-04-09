@@ -20,14 +20,14 @@ public class CrossDevicesController  {
         return crossDevicesService.findAll();
     }
 
-    @RequestMapping(value = "/SearchCrossDevices/{id_crossdevices}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public CrossDevicesDto read(@PathVariable("id_crossdevices") CrossDevicesDto obj) {
+    @RequestMapping(value = "/{id_crossdevices}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public CrossDevicesDto read(@PathVariable("id_crossdevices") int obj) {
         return crossDevicesService.read(obj);
     }
 
-    @RequestMapping(value = "/DeleteCrossDevices/{id_crossdevices}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public List<CrossDevicesDto> delete(@PathVariable("id_crossdevices") Integer id_crossdevices, @RequestBody CrossDevicesDto obj) {
-        return crossDevicesService.delete(id_crossdevices, obj);
+    @RequestMapping(value = "/DeleteCrossDevices/{id_crossdevices}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public List<CrossDevicesDto> delete(@PathVariable("id_crossdevices") Integer id_crossdevices) {
+        return crossDevicesService.delete(id_crossdevices);
     }
 
     @RequestMapping(value = "/UpdateCrossDevices/{id_crossdevices}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
