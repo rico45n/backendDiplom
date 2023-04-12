@@ -16,13 +16,13 @@ import java.util.List;
 
 @Service
 public class ConfigurationService implements IConfigurationService {
-   @Autowired
-   private ConfigurationRepository configurationRepository;
-   @Autowired
-   private UserRepository userRepository;
+    @Autowired
+    private ConfigurationRepository configurationRepository;
+    @Autowired
+    private UserRepository userRepository;
 
-   @Autowired
-   private DevicesRepository devicesRepository;
+    @Autowired
+    private DevicesRepository devicesRepository;
 
 
     @Override
@@ -36,11 +36,8 @@ public class ConfigurationService implements IConfigurationService {
     }
 
     @Override
-    public List<ConfigurationDto> delete(Integer id_config, Integer user_id) {
-        configurationRepository.findById(id_config).map(deleteConfig->{
-            deleteConfig.setIdUserOld(userRepository.findById(user_id).get());
-            return configurationRepository.save(deleteConfig);
-        });
+    public List<ConfigurationDto> delete(Integer id_config) {
+       configurationRepository.deleteById(id_config);
         return mapperEntityToDto();
     }
 
@@ -48,48 +45,47 @@ public class ConfigurationService implements IConfigurationService {
     public List<ConfigurationDto> update(Integer id_config, ConfigurationDto newObj) {
 
         configurationRepository.findById(id_config).map(configurationEntity -> {
-                configurationEntity
-                        .setConfiguration(
-                                devicesRepository.findById(newObj.getIdDevice()).get(),
-                                newObj.getConfigFirst(),
-                                newObj.getConfigLast(),
-                                newObj.getDeference(),
-                                userRepository.findById(newObj.getIdUserReg()).get(),
-                                userRepository.findById(newObj.getIdUserOld()).get()
-                        );
-                return configurationRepository.save(configurationEntity);
-           });
+            configurationEntity
+                    .setConfiguration(
+                            devicesRepository.findById(newObj.getIdDevice()).get(),
+                            newObj.getConfigFirst(),
+                            newObj.getConfigLast(),
+                            newObj.getDeference(),
+                            userRepository.findById(newObj.getIdUserReg()).get(),
+                            userRepository.findById(newObj.getIdUserOld()).get()
+                    );
+            return configurationRepository.save(configurationEntity);
+        });
 
-           ConfigurationEntity configDom = new ConfigurationEntity();
-           configDom.setConfiguration(devicesRepository.findById(newObj.getIdDevice()).get(),
-                    newObj.getConfigLast(),
-                   null,
-                    null,
-                    userRepository.findById(newObj.getIdUserReg()).get(),
-                    userRepository.findById(0).get());
-                configurationRepository.save(configDom);
-            return mapperEntityToDto();
+        ConfigurationEntity configDom = new ConfigurationEntity();
+        configDom.setConfiguration(devicesRepository.findById(newObj.getIdDevice()).get(),
+                newObj.getConfigLast(),
+                null,
+                null,
+                userRepository.findById(newObj.getIdUserReg()).get(),
+                userRepository.findById(0).get());
+        configurationRepository.save(configDom);
+        return mapperEntityToDto();
     }
 
     @Override
     public List<ConfigurationDto> create(ConfigurationDto obj) {
-        ConfigurationEntity configurationEntity = new ConfigurationEntity();
-        configurationEntity.setConfiguration(
-                devicesRepository.findById(obj.getIdDevice()).get(),
-                obj.getConfigFirst(),
-                obj.getConfigLast(),
-                obj.getDeference(),
-                userRepository.findById(obj.getIdUserReg()).get(),
-                userRepository.findById(0).get());
-        configurationRepository.save(configurationEntity);
+        System.out.println(obj);
+        configurationRepository.save(ConfigurationEntity.builder()
+                .idDevice(devicesRepository.findById(obj.getIdDevice()).get())
+                .configFirst(obj.getConfigFirst())
+                .configLast(obj.getConfigLast())
+                .deference(obj.getDeference())
+                .idUserReg(userRepository.findById(obj.getIdUserReg()).get())
+                .idUserOld(userRepository.findById(obj.getIdUserOld()).get())
+                .build());
         return mapperEntityToDto();
     }
 
-    private List<ConfigurationDto> mapperEntityToDto()
-    {
+    private List<ConfigurationDto> mapperEntityToDto() {
         List<ConfigurationDto> listDto = new ArrayList<>();
         List<ConfigurationEntity> listEntity = configurationRepository.findAll();
-        for(int i = 0; i<listEntity.size(); i++) {
+        for (int i = 0; i < listEntity.size(); i++) {
             ConfigurationEntity objEntity = listEntity.get(i);
             listDto.add(new ConfigurationDto(objEntity));
         }

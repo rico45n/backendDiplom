@@ -25,9 +25,9 @@ public class ConfigurationController {
         return configurationService.read(obj);
     }
 
-    @RequestMapping(value = "/DeleteConfiguration/{id_config}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public List<ConfigurationDto> delete(@PathVariable("id_config") Integer id_config, @RequestBody ConfigurationDto config) {
-        return configurationService.delete(id_config, config.getIdUserOld());
+    @RequestMapping(value = "/DeleteConfiguration/{id_config}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public List<ConfigurationDto> delete(@PathVariable("id_config") Integer id_config) {
+        return configurationService.delete(id_config);
     }
 
     @RequestMapping(value = "/UpdateConfiguration/{id_config}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

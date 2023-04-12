@@ -1,5 +1,7 @@
 package ru.pesnin.system.accounting.services.entity.journal;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.Date;
@@ -12,6 +14,8 @@ import ru.pesnin.system.accounting.services.entity.user.UsersEntity;
 @Data
 @Table(schema = "network", name = "Configuration")
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class ConfigurationEntity {
 
     @Id
